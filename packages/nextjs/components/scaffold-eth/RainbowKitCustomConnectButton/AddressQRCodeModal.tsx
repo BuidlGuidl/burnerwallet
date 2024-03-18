@@ -21,8 +21,10 @@ export const AddressQRCodeModal = ({ address, modalId }: AddressQRCodeModalProps
             </label>
             <div className="space-y-3 py-6">
               <div className="flex space-x-4 flex-col items-center gap-6">
+                <p className="font-bold text-2xl">Receive</p>
                 <QRCodeSVG value={address} size={256} />
                 <Address address={address} format="long" disableAddressLink />
+                <p>Make sure you only receive ETH to this address.</p>
               </div>
             </div>
           </label>
