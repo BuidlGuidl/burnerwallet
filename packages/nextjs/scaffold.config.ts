@@ -3,7 +3,7 @@ import * as chains from "viem/chains";
 
 export type ScaffoldConfig = {
   targetNetworks: readonly chains.Chain[];
-  alchemySDKChains: { [key: number]: Network };
+  alchemySDKChains: Record<string, Network>;
   pollingInterval: number;
   alchemyApiKey: string;
   walletConnectProjectId: string;
@@ -18,22 +18,26 @@ const scaffoldConfig = {
     chains.polygon,
     chains.optimism,
     chains.arbitrum,
+    chains.base,
     chains.sepolia,
     chains.polygonMumbai,
     chains.optimismSepolia,
     chains.arbitrumSepolia,
+    chains.baseSepolia,
   ],
 
   alchemySDKChains: {
-    1: Network.ETH_MAINNET,
-    137: Network.MATIC_MAINNET,
-    10: Network.OPT_MAINNET,
-    42161: Network.ARB_MAINNET,
+    [chains.mainnet.id]: Network.ETH_MAINNET,
+    [chains.polygon.id]: Network.MATIC_MAINNET,
+    [chains.optimism.id]: Network.OPT_MAINNET,
+    [chains.arbitrum.id]: Network.ARB_MAINNET,
+    [chains.base.id]: Network.BASE_MAINNET,
     // Tests networks
-    11155111: Network.ETH_SEPOLIA,
-    80001: Network.MATIC_MUMBAI,
-    11155420: Network.OPT_SEPOLIA,
-    421614: Network.ARB_SEPOLIA,
+    [chains.sepolia.id]: Network.ETH_SEPOLIA,
+    [chains.polygonMumbai.id]: Network.MATIC_MUMBAI,
+    [chains.optimismSepolia.id]: Network.OPT_SEPOLIA,
+    [chains.arbitrumSepolia.id]: Network.ARB_SEPOLIA,
+    [chains.baseSepolia.id]: Network.BASE_SEPOLIA,
   },
 
   // The interval at which your front-end polls the RPC servers for new data

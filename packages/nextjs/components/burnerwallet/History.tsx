@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Address } from "../../components/scaffold-eth";
 import { Alchemy, AssetTransfersCategory, AssetTransfersResponse, Network } from "alchemy-sdk";
 import { createPublicClient, hexToBigInt, http } from "viem";
+import * as chains from "viem/chains";
 import { useNetwork } from "wagmi";
 import { ArrowDownTrayIcon, ArrowPathIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import scaffoldConfig from "~~/scaffold.config";
@@ -34,6 +35,8 @@ export const History = ({ address }: { address: string }) => {
   const { chain } = useNetwork();
 
   const allCategories = useMemo(() => {
+    if (!chain) return [];
+
     const categories = [
       AssetTransfersCategory.ERC1155,
       AssetTransfersCategory.ERC20,
@@ -43,16 +46,15 @@ export const History = ({ address }: { address: string }) => {
 
     // Only Ethereum mainnet, sepolia and Polygon mainnet have the internal category
     // https://docs.alchemy.com/reference/alchemy-getassettransfers
-
-    if ([1, 11155111, 137].includes(chain?.id as number)) {
+    if ([chains.mainnet.id as number, chains.sepolia.id, chains.polygon.id].includes(chain.id)) {
       categories.push(AssetTransfersCategory.INTERNAL);
     }
 
-    // Optimism Sepolia do not have the external category (not documented in the previous link)
-
-    if (chain?.id !== 11155420) {
+    // Optimism Sepolia and Base mainnet/sepolia do not have the external category (Optimism Sepolia not documented in the previous link)
+    if (![chains.optimismSepolia.id as number, chains.base.id, chains.baseSepolia.id].includes(chain.id)) {
       categories.push(AssetTransfersCategory.EXTERNAL);
     }
+
     return categories;
   }, [chain]);
 

@@ -70,6 +70,14 @@ export const NETWORKS_EXTRA_DATA: Record<string, ChainAttributes> = {
     color: "#fbebd4",
     icon: "/networks-logos/scroll.jpg",
   },
+  [chains.base.id]: {
+    color: "#000000",
+    icon: "/networks-logos/base.jpg",
+  },
+  [chains.baseSepolia.id]: {
+    color: "#000000",
+    icon: "/networks-logos/base.jpg",
+  },
 };
 
 /**
