@@ -6,15 +6,6 @@ import { useNetwork } from "wagmi";
 import { ArrowDownTrayIcon, ArrowPathIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import scaffoldConfig from "~~/scaffold.config";
 
-const allCategories = [
-  AssetTransfersCategory.EXTERNAL,
-  AssetTransfersCategory.ERC1155,
-  AssetTransfersCategory.INTERNAL,
-  AssetTransfersCategory.ERC20,
-  AssetTransfersCategory.ERC721,
-  AssetTransfersCategory.SPECIALNFT,
-];
-
 const categoryToLabel = {
   [AssetTransfersCategory.EXTERNAL]: "External",
   [AssetTransfersCategory.ERC1155]: "NFT",
@@ -42,6 +33,26 @@ type HistoryItemByDate = {
 export const History = ({ address }: { address: string }) => {
   const { chain } = useNetwork();
 
+  const allCategories = [
+    AssetTransfersCategory.ERC1155,
+    AssetTransfersCategory.ERC20,
+    AssetTransfersCategory.ERC721,
+    AssetTransfersCategory.SPECIALNFT,
+  ];
+
+  // Only Ethereum mainnet, sepolia and Polygon mainnet have the internal category
+  // https://docs.alchemy.com/reference/alchemy-getassettransfers
+
+  if ([1, 11155111, 137].includes(chain?.id as number)) {
+    allCategories.push(AssetTransfersCategory.INTERNAL);
+  }
+
+  // Optimism Sepolia do not have the external category (not documented in the previous link)
+
+  if (chain?.id !== 11155420) {
+    allCategories.push(AssetTransfersCategory.EXTERNAL);
+  }
+
   const config = {
     apiKey: scaffoldConfig.alchemyApiKey,
     network: chain
@@ -51,6 +62,7 @@ export const History = ({ address }: { address: string }) => {
   const alchemy = new Alchemy(config);
 
   const [history, setHistory] = useState<HistoryItemByDate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const publicClient = createPublicClient({
     chain: chain,
@@ -84,6 +96,8 @@ export const History = ({ address }: { address: string }) => {
 
   useEffect(() => {
     const updateHistory = async () => {
+      setIsLoading(true);
+
       const dataFrom: AssetTransfersResponse = await getTransferFrom();
       const dataTo: AssetTransfersResponse = await getTransfersTo();
 
@@ -147,11 +161,20 @@ export const History = ({ address }: { address: string }) => {
         historyByDate[historyByDate.length - 1].items.push(item);
       });
       setHistory(historyByDate);
+      setIsLoading(false);
     };
     if (address && chain) {
       updateHistory();
     }
   }, [address, chain]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (history.length === 0) {
+    return <div>No history</div>;
+  }
 
   return (
     <>

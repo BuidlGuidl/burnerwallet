@@ -13,11 +13,27 @@ export type ScaffoldConfig = {
 
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.sepolia, chains.polygonMumbai],
+  targetNetworks: [
+    chains.mainnet,
+    chains.polygon,
+    chains.optimism,
+    chains.arbitrum,
+    chains.sepolia,
+    chains.polygonMumbai,
+    chains.optimismSepolia,
+    chains.arbitrumSepolia,
+  ],
 
   alchemySDKChains: {
+    1: Network.ETH_MAINNET,
+    137: Network.MATIC_MAINNET,
+    10: Network.OPT_MAINNET,
+    42161: Network.ARB_MAINNET,
+    // Tests networks
     11155111: Network.ETH_SEPOLIA,
     80001: Network.MATIC_MUMBAI,
+    11155420: Network.OPT_SEPOLIA,
+    421614: Network.ARB_SEPOLIA,
   },
 
   // The interval at which your front-end polls the RPC servers for new data
