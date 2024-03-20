@@ -42,7 +42,7 @@ export const SendETHModal = ({ modalId }: SendETHModalProps) => {
       setAmount("");
       notification.success("Sent! " + transactionData.hash);
     }
-  }, [isConfirmed]);
+  }, [isConfirmed, transactionData]);
 
   const sendDisabled =
     sending ||
