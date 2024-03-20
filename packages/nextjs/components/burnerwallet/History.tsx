@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Address } from "../../components/scaffold-eth";
 import { Alchemy, AssetTransfersCategory, AssetTransfersResponse, Network } from "alchemy-sdk";
 import { createPublicClient, hexToBigInt, http } from "viem";
@@ -33,73 +33,71 @@ type HistoryItemByDate = {
 export const History = ({ address }: { address: string }) => {
   const { chain } = useNetwork();
 
-  const allCategories = [
-    AssetTransfersCategory.ERC1155,
-    AssetTransfersCategory.ERC20,
-    AssetTransfersCategory.ERC721,
-    AssetTransfersCategory.SPECIALNFT,
-  ];
+  const allCategories = useMemo(() => {
+    const categories = [
+      AssetTransfersCategory.ERC1155,
+      AssetTransfersCategory.ERC20,
+      AssetTransfersCategory.ERC721,
+      AssetTransfersCategory.SPECIALNFT,
+    ];
 
-  // Only Ethereum mainnet, sepolia and Polygon mainnet have the internal category
-  // https://docs.alchemy.com/reference/alchemy-getassettransfers
+    // Only Ethereum mainnet, sepolia and Polygon mainnet have the internal category
+    // https://docs.alchemy.com/reference/alchemy-getassettransfers
 
-  if ([1, 11155111, 137].includes(chain?.id as number)) {
-    allCategories.push(AssetTransfersCategory.INTERNAL);
-  }
+    if ([1, 11155111, 137].includes(chain?.id as number)) {
+      categories.push(AssetTransfersCategory.INTERNAL);
+    }
 
-  // Optimism Sepolia do not have the external category (not documented in the previous link)
+    // Optimism Sepolia do not have the external category (not documented in the previous link)
 
-  if (chain?.id !== 11155420) {
-    allCategories.push(AssetTransfersCategory.EXTERNAL);
-  }
+    if (chain?.id !== 11155420) {
+      categories.push(AssetTransfersCategory.EXTERNAL);
+    }
+    return categories;
+  }, [chain]);
 
-  const config = {
-    apiKey: scaffoldConfig.alchemyApiKey,
-    network: chain
-      ? scaffoldConfig.alchemySDKChains[chain.id as keyof typeof scaffoldConfig.alchemySDKChains]
-      : Network.ETH_MAINNET,
-  };
-  const alchemy = new Alchemy(config);
+  const config = useMemo(() => {
+    return {
+      apiKey: scaffoldConfig.alchemyApiKey,
+      network: chain
+        ? scaffoldConfig.alchemySDKChains[chain.id as keyof typeof scaffoldConfig.alchemySDKChains]
+        : Network.ETH_MAINNET,
+    };
+  }, [chain]);
+  const alchemy = useMemo(() => new Alchemy(config), [config]);
 
   const [history, setHistory] = useState<HistoryItemByDate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const publicClient = createPublicClient({
-    chain: chain,
-    transport: http(
-      chain && chain.rpcUrls
-        ? (chain.rpcUrls["default"].http as unknown as string)
-        : "https://eth-mainnet.g.alchemy.com/v2",
-      { batch: true },
-    ),
-  });
-
-  const getTransferFrom = async () => {
-    const data = await alchemy.core.getAssetTransfers({
-      fromBlock: "0x0",
-      fromAddress: address,
-      category: allCategories,
-    });
-
-    return data;
-  };
-
-  const getTransfersTo = async () => {
-    const data = await alchemy.core.getAssetTransfers({
-      fromBlock: "0x0",
-      toAddress: address,
-      category: allCategories,
-    });
-
-    return data;
-  };
+  const publicClient = useMemo(
+    () =>
+      createPublicClient({
+        chain: chain,
+        transport: http(
+          chain && chain.rpcUrls
+            ? (chain.rpcUrls["default"].http as unknown as string)
+            : "https://eth-mainnet.g.alchemy.com/v2",
+          { batch: true },
+        ),
+      }),
+    [chain],
+  );
 
   useEffect(() => {
     const updateHistory = async () => {
       setIsLoading(true);
 
-      const dataFrom: AssetTransfersResponse = await getTransferFrom();
-      const dataTo: AssetTransfersResponse = await getTransfersTo();
+      const dataFrom: AssetTransfersResponse = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        fromAddress: address,
+        category: allCategories,
+      });
+
+      const dataTo: AssetTransfersResponse = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        toAddress: address,
+        category: allCategories,
+      });
 
       const dataFromBlockNumbers = dataFrom.transfers.map(item => item.blockNum);
       const dataToBlockNumbers = dataTo.transfers.map(item => item.blockNum);
@@ -166,7 +164,7 @@ export const History = ({ address }: { address: string }) => {
     if (address && chain) {
       updateHistory();
     }
-  }, [address, chain]);
+  }, [address, chain, publicClient, allCategories, alchemy]);
 
   if (isLoading) {
     return <div>Loading...</div>;
