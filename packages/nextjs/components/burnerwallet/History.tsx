@@ -86,18 +86,17 @@ export const History = ({ address }: { address: string }) => {
     const updateHistory = async () => {
       const dataFrom: AssetTransfersResponse = await getTransferFrom();
       const dataTo: AssetTransfersResponse = await getTransfersTo();
-      console.log(dataFrom);
-      console.log(dataTo);
+
       const dataFromBlockNumbers = dataFrom.transfers.map(item => item.blockNum);
       const dataToBlockNumbers = dataTo.transfers.map(item => item.blockNum);
+
       const blockNumbers = dataFromBlockNumbers.concat(dataToBlockNumbers);
-      console.log("blockNumbers", blockNumbers);
       const blocksData = await Promise.all(
         blockNumbers.map(blockNumber =>
           publicClient.getBlock({ blockNumber: hexToBigInt(blockNumber as `0x${string}`) }),
         ),
       );
-      console.log("blocksData", blocksData);
+
       const historyFrom = dataFrom.transfers.map(
         item =>
           ({

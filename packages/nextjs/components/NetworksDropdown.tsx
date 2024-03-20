@@ -46,8 +46,6 @@ const groupedOptions = networks.reduce<GroupedOptions>(
   },
 );
 
-console.log("groupedOptions", groupedOptions);
-
 const { Option } = components;
 const IconOption = (props: OptionProps<Options>) => (
   <Option {...props}>

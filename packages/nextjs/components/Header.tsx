@@ -20,8 +20,6 @@ export const Header = () => {
   const { address: connectedAddress } = useAccount();
   const { switchNetwork } = useSwitchNetwork();
   const { chain } = useNetwork();
-  console.log("chain", chain);
-  console.log("connectedAddress", connectedAddress);
 
   return (
     <>
