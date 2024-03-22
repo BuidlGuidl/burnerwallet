@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useAccount, useBalance, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { AddressInput, IntegerInput } from "~~/components/scaffold-eth/Input";
+import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth";
 
 type SendETHModalProps = {
@@ -11,7 +12,9 @@ type SendETHModalProps = {
 export const SendETHModal = ({ modalId }: SendETHModalProps) => {
   const { address: connectedAddress } = useAccount();
 
-  const [toAddress, setToAddress] = useState("");
+  const toAddress = useGlobalState(state => state.sendEthToAddress);
+  const setToAddress = useGlobalState(state => state.setSendEthToAddress);
+
   const [amount, setAmount] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [transactionHash, setTransactionHash] = useState<string>("");

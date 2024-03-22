@@ -18,6 +18,8 @@ type GlobalState = {
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => void;
   isQrReaderOpen: boolean;
   setIsQrReaderOpen: (newValue: boolean) => void;
+  sendEthToAddress: string;
+  setSendEthToAddress: (newValue: string) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -27,4 +29,6 @@ export const useGlobalState = create<GlobalState>(set => ({
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => set(() => ({ targetNetwork: newTargetNetwork })),
   isQrReaderOpen: false,
   setIsQrReaderOpen: (newValue: boolean): void => set(() => ({ isQrReaderOpen: newValue })),
+  sendEthToAddress: "",
+  setSendEthToAddress: (newValue: string): void => set(() => ({ sendEthToAddress: newValue })),
 }));
