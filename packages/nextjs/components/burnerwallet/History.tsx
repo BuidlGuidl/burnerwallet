@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Address } from "../../components/scaffold-eth";
 import { Alchemy, AssetTransfersCategory, AssetTransfersResponse, Network } from "alchemy-sdk";
 import { createPublicClient, hexToBigInt, http } from "viem";
@@ -169,11 +169,11 @@ export const History = ({ address }: { address: string }) => {
   }, [address, chain, publicClient, allCategories, alchemy]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <p className="text-center">Loading...</p>;
   }
 
   if (history.length === 0) {
-    return <div>No history</div>;
+    return <p className="text-center">No history</p>;
   }
 
   return (
