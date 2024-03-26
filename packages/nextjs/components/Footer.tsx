@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import ScanIcon from "../icons/ScanIcon";
 import { hardhat } from "viem/chains";
 import { CurrencyDollarIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { HeartIcon } from "@heroicons/react/24/outline";
@@ -14,6 +15,7 @@ import { useGlobalState } from "~~/services/store/store";
  */
 export const Footer = () => {
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrencyPrice);
+  const setIsQrReaderOpen = useGlobalState(state => state.setIsQrReaderOpen);
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
 
@@ -43,15 +45,15 @@ export const Footer = () => {
           <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
         </div>
       </div>
+      <button
+        className="fixed bg-primary inline-block p-4 rounded-full bottom-0 mb-8 left-0 right-0 w-[72px] m-auto"
+        onClick={() => setIsQrReaderOpen(true)}
+      >
+        <ScanIcon width="2.5rem" height="2.5rem" className="text-white" />
+      </button>
       <div className="w-full">
         <ul className="menu menu-horizontal w-full">
           <div className="flex justify-center items-center gap-2 text-sm w-full">
-            <div className="text-center">
-              <a href="https://github.com/scaffold-eth/se-2" target="_blank" rel="noreferrer" className="link">
-                Fork me
-              </a>
-            </div>
-            <span>·</span>
             <div className="flex justify-center items-center gap-2">
               <p className="m-0 text-center">
                 Built with <HeartIcon className="inline-block h-4 w-4" /> at
@@ -64,12 +66,6 @@ export const Footer = () => {
               >
                 <BuidlGuidlLogo className="w-3 h-5 pb-1" />
                 <span className="link">BuidlGuidl</span>
-              </a>
-            </div>
-            <span>·</span>
-            <div className="text-center">
-              <a href="https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA" target="_blank" rel="noreferrer" className="link">
-                Support
               </a>
             </div>
           </div>
