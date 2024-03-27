@@ -27,15 +27,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center py-2">
-        <div className="md:min-w-[32rem] p-6 my-14 md:my-10 w-full md:w-[35%]">
-          <Header />
-          <main className="md:static fixed bottom-0 left-0 w-full pb-4 bg-white md:bg-[#ffffff00] h-[50vh] md:h-full overflow-y-scroll rounded-t-3xl p-2 no-scrollbar">
-            {children}
-          </main>
-          <Footer />
-        </div>
-      </div>
+      <Header />
+      <main>{children}</main>
+      <Footer />
       <Toaster />
       <QrCodeReader />
     </>
