@@ -53,10 +53,10 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
   // Skeleton UI
   if (!checkSumAddress) {
     return (
-      <div className="animate-pulse flex space-x-4">
-        <div className="rounded-md bg-slate-300 h-6 w-6"></div>
+      <div className="animate-pulse flex flex-col items-center justify-center gap-4">
+        <div className="rounded-full bg-slate-300 h-16 w-16"></div>
         <div className="flex items-center space-y-6">
-          <div className="h-2 w-28 bg-slate-300 rounded"></div>
+          <div className="h-6 w-48 bg-slate-300 rounded"></div>
         </div>
       </div>
     );

@@ -20,10 +20,10 @@ export const Header = () => {
   const { chain } = useNetwork();
 
   return (
-    <div className="p-6 bg-pink-200">
-      <div className="max-w-xl mx-auto">
+    <div className="max-w-xl mx-auto">
+      <div className="p-6 bg-pink-200">
         <div className="flex justify-between items-center mb-6">
-          <Cog6ToothIcon className="w-8" />
+          <Cog6ToothIcon className="w-6" />
           <NetworksDropdown
             onChange={option => switchNetwork?.(option.value)}
             value={chain ? chain.id : networks[0].id}

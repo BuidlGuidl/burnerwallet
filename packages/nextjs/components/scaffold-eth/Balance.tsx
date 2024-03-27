@@ -27,10 +27,9 @@ export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
 
   if (!address || isLoading || balance === null) {
     return (
-      <div className="animate-pulse flex space-x-4">
-        <div className="rounded-md bg-slate-300 h-6 w-6"></div>
+      <div className="animate-pulse">
         <div className="flex items-center space-y-6">
-          <div className="h-2 w-28 bg-slate-300 rounded"></div>
+          <div className="h-8 w-32 bg-slate-300 rounded"></div>
         </div>
       </div>
     );
