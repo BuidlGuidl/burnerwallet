@@ -123,9 +123,9 @@ export const History = ({ address }: { address: string }) => {
               blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
             icon:
               item.category === AssetTransfersCategory.INTERNAL ? (
-                <ArrowPathIcon className="w-8" />
+                <ArrowPathIcon className="w-5" />
               ) : (
-                <PaperAirplaneIcon className="w-8" />
+                <PaperAirplaneIcon className="w-5" />
               ),
           } as HistoryItem),
       );
@@ -142,9 +142,9 @@ export const History = ({ address }: { address: string }) => {
               blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
             icon:
               item.category === AssetTransfersCategory.INTERNAL ? (
-                <ArrowPathIcon className="w-8" />
+                <ArrowPathIcon className="w-5" />
               ) : (
-                <ArrowDownTrayIcon className="w-8" />
+                <ArrowDownTrayIcon className="w-5" />
               ),
           } as HistoryItem),
       );
@@ -179,19 +179,18 @@ export const History = ({ address }: { address: string }) => {
   return (
     <>
       {history.map(historyItem => (
-        <div key={historyItem.date}>
-          <h2 className="text-xl underline">{historyItem.date}</h2>
+        <div key={historyItem.date} className="py-4 border-gray-300">
+          <h2 className="text-lg font-semibold leading-none">{historyItem.date}</h2>
           <ul>
             {historyItem.items.map((item, index) => (
-              <li
-                key={`${historyItem.date}-${index}`}
-                className="flex justify-between items-center gap-2 p-2 border-b border-gray-300"
-              >
-                <div>{item.icon}</div>
-                <div className="grow text-left flex flex-col ml-2 ">
-                  <div>{item.categoryLabel}</div>
+              <li key={`${historyItem.date}-${index}`} className="flex justify-between items-center gap-4 pt-4">
+                <div className="flex flex-shrink-0 items-center justify-center w-10 h-10 bg-secondary text-secondary-content rounded-full">
+                  {item.icon}
+                </div>
+                <div className="grow text-left flex flex-col">
+                  <p className="text-md font-semibold m-0">{item.categoryLabel}</p>
                   <div>
-                    <Address address={item.address} />
+                    <Address address={item.address} format="short" disableAddressLink isHistoryView size="sm" />
                   </div>
                 </div>
                 <div>
