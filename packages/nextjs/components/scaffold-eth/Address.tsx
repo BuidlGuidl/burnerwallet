@@ -98,7 +98,7 @@ export const Address = ({ address, disableAddressLink, isHistoryView, format, si
 
         {addressCopied ? (
           <CheckCircleIcon
-            className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer"
+            className="ml-1.5 text-xl font-normal text-orange-600 h-5 w-5 cursor-pointer"
             aria-hidden="true"
           />
         ) : (
@@ -111,7 +111,7 @@ export const Address = ({ address, disableAddressLink, isHistoryView, format, si
               }, 800);
             }}
           >
-            <DocumentDuplicateIcon className="ml-2 text-sky-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
+            <DocumentDuplicateIcon className="ml-2 text-orange-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
           </CopyToClipboard>
         )}
 
@@ -121,7 +121,7 @@ export const Address = ({ address, disableAddressLink, isHistoryView, format, si
           href={blockExplorerAddressLink}
           rel="noopener noreferrer"
         >
-          <ArrowTopRightOnSquareIcon className="text-sky-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
+          <ArrowTopRightOnSquareIcon className="text-orange-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
         </a>
       </div>
     </div>

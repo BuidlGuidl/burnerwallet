@@ -180,7 +180,7 @@ export const History = ({ address }: { address: string }) => {
     <>
       {history.map(historyItem => (
         <div key={historyItem.date} className="py-4 border-gray-300">
-          <h2 className="text-lg font-semibold leading-none">{historyItem.date}</h2>
+          <h2 className="m-0 text-lg font-semibold leading-none">{historyItem.date}</h2>
           <ul>
             {historyItem.items.map((item, index) => (
               <li key={`${historyItem.date}-${index}`} className="flex justify-between items-center gap-4 pt-4">
@@ -197,7 +197,7 @@ export const History = ({ address }: { address: string }) => {
                   {item.value ? (
                     <>
                       {item.type === "sent" ? "-" : "+"}
-                      {item.value}
+                      {item.value} ETH
                     </>
                   ) : (
                     "0"
