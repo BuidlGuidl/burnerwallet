@@ -14,6 +14,7 @@ import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
 type AddressProps = {
   address?: AddressType;
   disableAddressLink?: boolean;
+  isHistoryView?: boolean;
   format?: "short" | "long";
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
 };
@@ -21,7 +22,7 @@ type AddressProps = {
 /**
  * Displays an address (or ENS) with a Blockie image and option to copy address.
  */
-export const Address = ({ address, disableAddressLink, format, size = "base" }: AddressProps) => {
+export const Address = ({ address, disableAddressLink, isHistoryView, format, size = "base" }: AddressProps) => {
   const [ens, setEns] = useState<string | null>();
   const [ensAvatar, setEnsAvatar] = useState<string | null>();
   const [addressCopied, setAddressCopied] = useState(false);
@@ -54,7 +55,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
   if (!checkSumAddress) {
     return (
       <div className="animate-pulse flex flex-col items-center justify-center gap-4">
-        <div className="rounded-full bg-slate-300 h-16 w-16"></div>
+        {!isHistoryView && <div className="rounded-full bg-slate-300 h-16 w-16"></div>}
         <div className="flex items-center space-y-6">
           <div className="h-6 w-48 bg-slate-300 rounded"></div>
         </div>
@@ -75,30 +76,29 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
     displayAddress = checkSumAddress;
   }
 
+  const containerClass = isHistoryView ? "" : "flex flex-col items-center";
+  const addressContainerClass = isHistoryView ? "flex items-center" : "flex items-center mt-4";
+  const addressClass = isHistoryView ? `text-${size}` : `ml-1.5 text-${size} font-normal`;
+
   return (
-    <div className="flex flex-col items-center">
-      <BlockieAvatar address={checkSumAddress} ensImage={ensAvatar} size={60} />
-      <div className="flex items-center mt-4">
+    <div className={containerClass}>
+      {!isHistoryView && <BlockieAvatar address={checkSumAddress} ensImage={ensAvatar} size={60} />}
+      <div className={addressContainerClass}>
         {disableAddressLink ? (
-          <span className={`ml-1.5 text-${size} font-normal`}>{displayAddress}</span>
+          <span className={addressClass}>{displayAddress}</span>
         ) : targetNetwork.id === hardhat.id ? (
-          <span className={`ml-1.5 text-${size} font-normal`}>
+          <span className={addressClass}>
             <Link href={blockExplorerAddressLink}>{displayAddress}</Link>
           </span>
         ) : (
-          <a
-            className={`ml-1.5 text-${size} font-normal`}
-            target="_blank"
-            href={blockExplorerAddressLink}
-            rel="noopener noreferrer"
-          >
+          <a className={addressClass} target="_blank" href={blockExplorerAddressLink} rel="noopener noreferrer">
             {displayAddress}
           </a>
         )}
 
         {addressCopied ? (
           <CheckCircleIcon
-            className="ml-1.5 text-xl font-normal text-sky-600 h-5 w-5 cursor-pointer"
+            className="ml-1.5 text-xl font-normal text-orange-600 h-5 w-5 cursor-pointer"
             aria-hidden="true"
           />
         ) : (
@@ -111,7 +111,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
               }, 800);
             }}
           >
-            <DocumentDuplicateIcon className="ml-2 text-sky-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
+            <DocumentDuplicateIcon className="ml-2 text-orange-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
           </CopyToClipboard>
         )}
 
@@ -121,7 +121,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
           href={blockExplorerAddressLink}
           rel="noopener noreferrer"
         >
-          <ArrowTopRightOnSquareIcon className="text-sky-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
+          <ArrowTopRightOnSquareIcon className="text-orange-600 h-6 w-6 cursor-pointer" aria-hidden="true" />
         </a>
       </div>
     </div>

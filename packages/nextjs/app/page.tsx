@@ -11,7 +11,9 @@ const Home: NextPage = () => {
 
   return (
     <div className="max-w-xl mx-auto">
-      <section className="p-4">{connectedAddress && <History address={connectedAddress} />}</section>
+      <section className="px-6 pb-16 pt-2 divide-y">
+        {connectedAddress && <History address={connectedAddress} />}
+      </section>
       <SendETHModal modalId="send-eth-modal" />
       {connectedAddress && <AddressQRCodeModal modalId="qrcode-modal" address={connectedAddress} />}
     </div>
