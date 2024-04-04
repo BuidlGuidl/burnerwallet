@@ -48,7 +48,7 @@ export const Header = () => {
               </DrawerHeader>
               <div className="flex flex-col items-center gap-4 mb-4 px-4">
                 {connectedAddress && <QRCodeSVG value={connectedAddress} size={256} />}
-                <Address address={connectedAddress} format="short" disableAddressLink isHistoryView />
+                <Address address={connectedAddress} format="short" disableAddressLink isSimpleView />
                 <p className="text-center">
                   Use this address to receive tokens and NFTs on Ethereum, Base, Optimism, Polygon, Arbitrum, and other
                   compatible networks.
