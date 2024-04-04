@@ -1,7 +1,9 @@
 "use client";
 
+import { QRCodeSVG } from "qrcode.react";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { ArrowDownTrayIcon, Cog6ToothIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
 import { NetworksDropdown } from "~~/components/NetworksDropdown";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { useAutoConnect } from "~~/hooks/scaffold-eth";
@@ -36,13 +38,24 @@ export const Header = () => {
           <Balance className="text-2xl" address={connectedAddress} />
         </div>
         <div className="flex items-center justify-center gap-6 mt-6">
-          <label
-            htmlFor="qrcode-modal"
-            className="flex items-center bg-white text-custom-black dark:text-black rounded-full px-4 py-2"
-          >
-            <ArrowDownTrayIcon className="w-8 mr-2" />
-            <span className="font-bold">Receive</span>
-          </label>
+          <Drawer>
+            <DrawerTrigger className="btn btn-primary">
+              <ArrowDownTrayIcon className="w-6" /> Receive
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle className="mt-1 text-xl md:text-2xl">Receive</DrawerTitle>
+              </DrawerHeader>
+              <div className="flex flex-col items-center gap-4 mb-4 px-4">
+                {connectedAddress && <QRCodeSVG value={connectedAddress} size={256} />}
+                <Address address={connectedAddress} format="short" disableAddressLink isHistoryView />
+                <p className="text-center">
+                  Use this address to receive tokens and NFTs on Ethereum, Base, Optimism, Polygon, Arbitrum, and other
+                  compatible networks.
+                </p>
+              </div>
+            </DrawerContent>
+          </Drawer>
           <label
             htmlFor="send-eth-modal"
             className="flex items-center bg-white text-custom-black dark:text-black rounded-full px-4 py-2"
