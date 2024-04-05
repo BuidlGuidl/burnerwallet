@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { Cog6ToothIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { NetworksDropdown } from "~~/components/NetworksDropdown";
 import { ReceiveDrawer } from "~~/components/burnerwallet/ReceiveDrawer";
 import { SendDrawer } from "~~/components/burnerwallet/SendDrawer";
@@ -40,13 +40,6 @@ export const Header = () => {
         <div className="flex items-center justify-center gap-6 mt-6">
           <ReceiveDrawer address={connectedAddress} />
           <SendDrawer address={connectedAddress} />
-          <label
-            htmlFor="send-eth-modal"
-            className="flex items-center bg-white text-custom-black dark:text-black rounded-full px-4 py-2"
-          >
-            <PaperAirplaneIcon className="w-8 mr-2" />
-            <span className="font-bold">Send</span>
-          </label>
         </div>
       </div>
     </div>
