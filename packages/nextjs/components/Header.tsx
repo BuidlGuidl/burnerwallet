@@ -4,6 +4,7 @@ import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { Cog6ToothIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { NetworksDropdown } from "~~/components/NetworksDropdown";
 import { ReceiveDrawer } from "~~/components/burnerwallet/ReceiveDrawer";
+import { SendDrawer } from "~~/components/burnerwallet/SendDrawer";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { useAutoConnect } from "~~/hooks/scaffold-eth";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
@@ -38,6 +39,7 @@ export const Header = () => {
         </div>
         <div className="flex items-center justify-center gap-6 mt-6">
           <ReceiveDrawer address={connectedAddress} />
+          <SendDrawer address={connectedAddress} />
           <label
             htmlFor="send-eth-modal"
             className="flex items-center bg-white text-custom-black dark:text-black rounded-full px-4 py-2"
