@@ -190,7 +190,7 @@ export const History = ({ address }: { address: string }) => {
                 <div className="grow text-left flex flex-col">
                   <p className="text-md font-semibold m-0">{item.categoryLabel}</p>
                   <div>
-                    <Address address={item.address} format="short" disableAddressLink isHistoryView size="sm" />
+                    <Address address={item.address} format="short" disableAddressLink isSimpleView size="sm" />
                   </div>
                 </div>
                 <div>
