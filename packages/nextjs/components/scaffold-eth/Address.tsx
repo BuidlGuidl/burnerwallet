@@ -14,7 +14,7 @@ import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
 type AddressProps = {
   address?: AddressType;
   disableAddressLink?: boolean;
-  isHistoryView?: boolean;
+  isSimpleView?: boolean;
   format?: "short" | "long";
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
 };
@@ -22,7 +22,7 @@ type AddressProps = {
 /**
  * Displays an address (or ENS) with a Blockie image and option to copy address.
  */
-export const Address = ({ address, disableAddressLink, isHistoryView, format, size = "base" }: AddressProps) => {
+export const Address = ({ address, disableAddressLink, isSimpleView, format, size = "base" }: AddressProps) => {
   const [ens, setEns] = useState<string | null>();
   const [ensAvatar, setEnsAvatar] = useState<string | null>();
   const [addressCopied, setAddressCopied] = useState(false);
@@ -55,7 +55,7 @@ export const Address = ({ address, disableAddressLink, isHistoryView, format, si
   if (!checkSumAddress) {
     return (
       <div className="animate-pulse flex flex-col items-center justify-center gap-4">
-        {!isHistoryView && <div className="rounded-full bg-slate-300 h-16 w-16"></div>}
+        {!isSimpleView && <div className="rounded-full bg-slate-300 h-16 w-16"></div>}
         <div className="flex items-center space-y-6">
           <div className="h-6 w-48 bg-slate-300 rounded"></div>
         </div>
@@ -76,13 +76,13 @@ export const Address = ({ address, disableAddressLink, isHistoryView, format, si
     displayAddress = checkSumAddress;
   }
 
-  const containerClass = isHistoryView ? "" : "flex flex-col items-center";
-  const addressContainerClass = isHistoryView ? "flex items-center" : "flex items-center mt-4";
-  const addressClass = isHistoryView ? `text-${size}` : `ml-1.5 text-${size} font-normal`;
+  const containerClass = isSimpleView ? "" : "flex flex-col items-center";
+  const addressContainerClass = isSimpleView ? "flex items-center" : "flex items-center mt-4";
+  const addressClass = isSimpleView ? `text-${size}` : `ml-1.5 text-${size} font-normal`;
 
   return (
     <div className={containerClass}>
-      {!isHistoryView && <BlockieAvatar address={checkSumAddress} ensImage={ensAvatar} size={60} />}
+      {!isSimpleView && <BlockieAvatar address={checkSumAddress} ensImage={ensAvatar} size={60} />}
       <div className={addressContainerClass}>
         {disableAddressLink ? (
           <span className={addressClass}>{displayAddress}</span>
