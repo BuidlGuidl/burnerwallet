@@ -26,9 +26,11 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <Header />
-      <main>{children}</main>
-      <Footer />
+      <div className="max-w-xl mx-auto min-h-screen border-x border-gray-300 shadow-lg">
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </div>
       <Toaster />
       <QrCodeReader />
     </>
