@@ -15,7 +15,7 @@ const QrCodeReader = () => {
     if (isAddress(result)) {
       setToAddress(result);
       setIsQrReaderOpen(false);
-      document.getElementById("send-eth-modal")?.click();
+      document.getElementById("send-eth-drawer")?.click();
     } else {
       notification.error("Invalid address");
     }
