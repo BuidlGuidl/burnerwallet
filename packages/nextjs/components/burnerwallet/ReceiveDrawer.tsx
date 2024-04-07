@@ -14,7 +14,7 @@ export const ReceiveDrawer = ({ address }: ReceiveDrawerProps) => {
       <DrawerTrigger className="btn btn-neutral">
         <ArrowDownTrayIcon className="w-6" /> Receive
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="bg-white text-neutral-content">
         <DrawerHeader>
           <DrawerTitle className="mt-1 text-xl md:text-2xl">Receive</DrawerTitle>
         </DrawerHeader>
