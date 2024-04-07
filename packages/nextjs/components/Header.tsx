@@ -35,7 +35,7 @@ export const Header = () => {
           />
         </div>
       )}
-      <div className="relative z-10 p-6 glass text-white">
+      <div className="relative z-10 p-6 glass">
         <div className="flex justify-between items-center mb-6">
           <Cog6ToothIcon className="w-6" />
           <NetworksDropdown
@@ -43,9 +43,7 @@ export const Header = () => {
             value={chain ? chain.id : networks[0].id}
           />
         </div>
-        <div>
-          <Address address={connectedAddress} disableAddressLink size="xl" format="short" />
-        </div>
+        <Address address={connectedAddress} disableAddressLink size="xl" format="short" />
         <div className="mt-4 flex justify-center">
           <Balance className="text-2xl" address={connectedAddress} />
         </div>
