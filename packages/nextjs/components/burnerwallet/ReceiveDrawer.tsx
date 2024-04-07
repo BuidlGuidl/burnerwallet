@@ -11,7 +11,7 @@ type ReceiveDrawerProps = {
 export const ReceiveDrawer = ({ address }: ReceiveDrawerProps) => {
   return (
     <Drawer>
-      <DrawerTrigger className="btn btn-primary">
+      <DrawerTrigger className="btn btn-neutral">
         <ArrowDownTrayIcon className="w-6" /> Receive
       </DrawerTrigger>
       <DrawerContent>

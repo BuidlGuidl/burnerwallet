@@ -58,7 +58,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
 
   return (
     <Drawer>
-      <DrawerTrigger className="btn btn-primary">
+      <DrawerTrigger className="btn btn-neutral">
         <PaperAirplaneIcon className="w-6" /> Send
       </DrawerTrigger>
       <DrawerContent>
