@@ -1,5 +1,6 @@
 "use client";
 
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { NetworksDropdown } from "~~/components/NetworksDropdown";
@@ -22,23 +23,36 @@ export const Header = () => {
   const { chain } = useNetwork();
 
   return (
-    <div className="p-6 bg-pink-200">
-      <div className="flex justify-between items-center mb-6">
-        <Cog6ToothIcon className="w-6" />
-        <NetworksDropdown
-          onChange={option => switchNetwork?.(option.value)}
-          value={chain ? chain.id : networks[0].id}
-        />
-      </div>
-      <div>
-        <Address address={connectedAddress} disableAddressLink size="xl" format="short" />
-      </div>
-      <div className="mt-4 flex justify-center">
-        <Balance className="text-2xl" address={connectedAddress} />
-      </div>
-      <div className="flex items-center justify-center gap-6 mt-6">
-        <ReceiveDrawer address={connectedAddress} />
-        <SendDrawer address={connectedAddress} />
+    <div className="relative overflow-hidden">
+      {connectedAddress && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Jazzicon
+            diameter={700}
+            paperStyles={{
+              borderRadius: 0,
+            }}
+            seed={jsNumberForAddress(connectedAddress)}
+          />
+        </div>
+      )}
+      <div className="relative z-10 p-6 glass text-white">
+        <div className="flex justify-between items-center mb-6">
+          <Cog6ToothIcon className="w-6" />
+          <NetworksDropdown
+            onChange={option => switchNetwork?.(option.value)}
+            value={chain ? chain.id : networks[0].id}
+          />
+        </div>
+        <div>
+          <Address address={connectedAddress} disableAddressLink size="xl" format="short" />
+        </div>
+        <div className="mt-4 flex justify-center">
+          <Balance className="text-2xl" address={connectedAddress} />
+        </div>
+        <div className="flex items-center justify-center gap-6 mt-6">
+          <ReceiveDrawer address={connectedAddress} />
+          <SendDrawer address={connectedAddress} />
+        </div>
       </div>
     </div>
   );
