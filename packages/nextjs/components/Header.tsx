@@ -27,7 +27,7 @@ export const Header = () => {
       {connectedAddress && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Jazzicon
-            diameter={700}
+            diameter={600}
             paperStyles={{
               borderRadius: 0,
             }}
