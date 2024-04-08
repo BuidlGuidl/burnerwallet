@@ -58,7 +58,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
 
   return (
     <Drawer>
-      <DrawerTrigger id="send-eth-drawer" className="btn btn-primary">
+      <DrawerTrigger id="send-eth-drawer" className="btn btn-neutral bg-white/50">
         <PaperAirplaneIcon className="w-6" /> Send
       </DrawerTrigger>
       <DrawerContent>
@@ -86,7 +86,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
                   : "0"}{" "}
                 ETH
               </p>
-              <button className="btn btn-primary mt-4" onClick={handleSend} disabled={sendDisabled}>
+              <button className="btn btn-neutral mt-4" onClick={handleSend} disabled={sendDisabled}>
                 Send
               </button>
               {sending && <p>Sending...</p>}
