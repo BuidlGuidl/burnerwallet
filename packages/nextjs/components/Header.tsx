@@ -2,10 +2,10 @@
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { NetworksDropdown } from "~~/components/NetworksDropdown";
 import { ReceiveDrawer } from "~~/components/burnerwallet/ReceiveDrawer";
 import { SendDrawer } from "~~/components/burnerwallet/SendDrawer";
+import { SettingsDrawer } from "~~/components/burnerwallet/SettingsDrawer";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { useAutoConnect } from "~~/hooks/scaffold-eth";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
@@ -37,7 +37,7 @@ export const Header = () => {
       )}
       <div className="relative z-10 p-6 glass">
         <div className="flex justify-between items-center mb-6">
-          <Cog6ToothIcon className="w-6" />
+          <SettingsDrawer />
           <NetworksDropdown
             onChange={option => switchNetwork?.(option.value)}
             value={chain ? chain.id : networks[0].id}

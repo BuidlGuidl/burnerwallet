@@ -62,6 +62,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
         <PaperAirplaneIcon className="w-6" /> Send
       </DrawerTrigger>
       <DrawerContent>
+        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-gray-200 dark:bg-gray-700" />
         <DrawerHeader>
           <DrawerTitle className="mt-1 text-xl md:text-2xl">Send</DrawerTitle>
         </DrawerHeader>
