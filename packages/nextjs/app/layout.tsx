@@ -9,19 +9,23 @@ const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   : `http://localhost:${process.env.PORT}`;
 const imageUrl = `${baseUrl}/thumbnail.jpg`;
 
+const title = "Burner Wallet";
+const titleTemplate = "%s | Burner Wallet";
+const description = "A temporary crypto wallet to quickly send or receive assets on Ethereum and popular L2 chains";
+
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Scaffold-ETH 2 App",
-    template: "%s | Scaffold-ETH 2",
+    default: title,
+    template: titleTemplate,
   },
-  description: "Built with 🏗 Scaffold-ETH 2",
+  description,
   openGraph: {
     title: {
-      default: "Scaffold-ETH 2 App",
-      template: "%s | Scaffold-ETH 2",
+      default: title,
+      template: titleTemplate,
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description,
     images: [
       {
         url: imageUrl,
@@ -32,10 +36,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [imageUrl],
     title: {
-      default: "Scaffold-ETH 2",
-      template: "%s | Scaffold-ETH 2",
+      default: title,
+      template: titleTemplate,
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description,
   },
   icons: {
     icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
