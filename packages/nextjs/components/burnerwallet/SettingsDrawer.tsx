@@ -19,7 +19,7 @@ export const SettingsDrawer = () => {
 
   return (
     <Drawer direction="left">
-      <DrawerTrigger className="btn btn-sm btn-ghost">
+      <DrawerTrigger className="btn btn-sm btn-ghost text-white">
         <Cog6ToothIcon className="w-6" />
       </DrawerTrigger>
       <DrawerContent className="flex flex-col h-full w-[80%] md:w-[400px] fixed bottom-0 left-0 rounded-tl-none">

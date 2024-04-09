@@ -43,9 +43,11 @@ export const Header = () => {
             value={chain ? chain.id : networks[0].id}
           />
         </div>
-        <Address address={connectedAddress} disableAddressLink size="xl" format="short" />
-        <div className="mt-4 flex justify-center">
-          <Balance className="text-2xl" address={connectedAddress} />
+        <div className="text-white">
+          <Address address={connectedAddress} disableAddressLink size="xl" format="short" />
+          <div className="mt-4 flex justify-center">
+            <Balance className="text-2xl" address={connectedAddress} />
+          </div>
         </div>
         <div className="flex items-center justify-center gap-6 mt-6">
           <ReceiveDrawer address={connectedAddress} />
