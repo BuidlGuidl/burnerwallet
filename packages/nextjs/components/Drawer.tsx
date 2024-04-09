@@ -37,7 +37,6 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-gray-200" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
@@ -74,6 +73,10 @@ const DrawerDescription = React.forwardRef<
 ));
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
+const DrawerLine = () => {
+  return <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-border-muted" />;
+};
+
 export {
   Drawer,
   DrawerClose,
@@ -81,6 +84,7 @@ export {
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
+  DrawerLine,
   DrawerOverlay,
   DrawerPortal,
   DrawerTitle,

@@ -9,7 +9,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="max-w-xl mx-auto">
-      <section className="px-6 pb-16 pt-2 divide-y">
+      <section className="px-6 pb-28 pt-2 divide-y">
         {connectedAddress && <History address={connectedAddress} />}
       </section>
     </div>

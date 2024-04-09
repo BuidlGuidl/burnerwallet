@@ -183,7 +183,7 @@ export const History = ({ address }: { address: string }) => {
   return (
     <>
       {history.map(historyItem => (
-        <div key={historyItem.date} className="py-4 border-base-100">
+        <div key={historyItem.date} className="py-4 border-border-muted">
           <h2 className="m-0 text-lg font-semibold leading-none">{historyItem.date}</h2>
           <ul>
             {historyItem.items.map((item, index) => (
