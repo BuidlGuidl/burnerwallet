@@ -1,5 +1,5 @@
 {
-  "name": "Scaffold-ETH 2 DApp",
-  "description": "A DApp built with Scaffold-ETH",
+  "name": "Burner Wallet",
+  "description": "A temporary crypto wallet to quickly send or receive assets on Ethereum and popular L2 chains",
   "iconPath": "logo.svg"
 }
