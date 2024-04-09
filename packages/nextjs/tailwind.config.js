@@ -36,10 +36,7 @@ module.exports = {
           ".link:hover": {
             opacity: "80%",
           },
-          ".border-100": {
-            backgroundColor: "#e5e7eb",
-            borderColor: "#e5e7eb",
-          },
+          "--border-muted": "#e5e7eb",
         },
       },
       {
@@ -77,10 +74,7 @@ module.exports = {
           ".link:hover": {
             opacity: "80%",
           },
-          ".border-100": {
-            backgroundColor: "#374151",
-            borderColor: "#374151",
-          },
+          "--border-muted": "#374151",
         },
       },
     ],
@@ -92,6 +86,9 @@ module.exports = {
       },
       animation: {
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
+      colors: {
+        "border-muted": "var(--border-muted)",
       },
     },
   },
