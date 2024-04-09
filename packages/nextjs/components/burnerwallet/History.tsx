@@ -19,6 +19,7 @@ const categoryToLabel = {
 type HistoryItem = {
   address: string;
   value: number;
+  asset: string | null;
   type: "sent" | "received";
   category: AssetTransfersCategory;
   categoryLabel: string;
@@ -116,6 +117,7 @@ export const History = ({ address }: { address: string }) => {
           ({
             address: item.to,
             value: item.value,
+            asset: item.asset,
             type: "sent",
             category: item.category,
             categoryLabel: item.category === AssetTransfersCategory.EXTERNAL ? "Sent" : categoryToLabel[item.category],
@@ -129,11 +131,13 @@ export const History = ({ address }: { address: string }) => {
               ),
           } as HistoryItem),
       );
+
       const historyTo = dataTo.transfers.map(
         item =>
           ({
             address: item.from,
             value: item.value,
+            asset: item.asset,
             type: "received",
             category: item.category,
             categoryLabel:
@@ -197,7 +201,7 @@ export const History = ({ address }: { address: string }) => {
                   {item.value ? (
                     <>
                       {item.type === "sent" ? "-" : "+"}
-                      {item.value} ETH
+                      {item.value} {item.asset}
                     </>
                   ) : (
                     "0"
