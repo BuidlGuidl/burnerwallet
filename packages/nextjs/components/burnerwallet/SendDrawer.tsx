@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Address as AddressType, formatEther, parseEther } from "viem";
 import { useBalance, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
 import { AddressInput, IntegerInput } from "~~/components/scaffold-eth/Input";
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth";
@@ -62,7 +62,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
         <PaperAirplaneIcon className="w-6" /> Send
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-gray-300" />
+        <DrawerLine />
         <DrawerHeader>
           <DrawerTitle className="mt-1 text-xl md:text-2xl">Send</DrawerTitle>
         </DrawerHeader>

@@ -36,6 +36,10 @@ module.exports = {
           ".link:hover": {
             opacity: "80%",
           },
+          ".border-100": {
+            backgroundColor: "#e5e7eb",
+            borderColor: "#e5e7eb",
+          },
         },
       },
       {
@@ -72,6 +76,10 @@ module.exports = {
           },
           ".link:hover": {
             opacity: "80%",
+          },
+          ".border-100": {
+            backgroundColor: "#374151",
+            borderColor: "#374151",
           },
         },
       },

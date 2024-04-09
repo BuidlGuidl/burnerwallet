@@ -1,7 +1,7 @@
 import { QRCodeSVG } from "qrcode.react";
 import { Address as AddressType } from "viem";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
 import { Address } from "~~/components/scaffold-eth";
 
 type ReceiveDrawerProps = {
@@ -15,7 +15,7 @@ export const ReceiveDrawer = ({ address }: ReceiveDrawerProps) => {
         <ArrowDownTrayIcon className="w-6" /> Receive
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-gray-300" />
+        <DrawerLine />
         <DrawerHeader>
           <DrawerTitle className="mt-1 text-xl md:text-2xl">Receive</DrawerTitle>
         </DrawerHeader>
