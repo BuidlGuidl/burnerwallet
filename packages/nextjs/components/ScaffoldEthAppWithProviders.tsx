@@ -26,7 +26,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <div className="max-w-xl mx-auto min-h-screen border-x border-base-100 shadow-lg">
+      <div className="max-w-xl mx-auto min-h-screen bg-base-200 border-x border-base-100 shadow-lg">
         <Header />
         <main>{children}</main>
         <Footer />

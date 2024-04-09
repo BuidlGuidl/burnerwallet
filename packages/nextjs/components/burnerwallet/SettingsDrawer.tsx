@@ -17,7 +17,7 @@ export const SettingsDrawer = () => {
         <Cog6ToothIcon className="w-6" />
       </DrawerTrigger>
       <DrawerContent className="flex flex-col h-full w-[80%] md:w-[400px] mt-24 fixed bottom-0 left-0">
-        <DrawerHeader>
+        <DrawerHeader className="gap-0">
           <DrawerClose className="btn btn-sm btn-circle btn-ghost">
             <ChevronLeftIcon className="w-6 h-6" />
           </DrawerClose>
