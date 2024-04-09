@@ -12,10 +12,22 @@ import {
 } from "~~/components/Drawer";
 import { SwitchTheme } from "~~/components/SwitchTheme";
 import { BuidlGuidlLogo } from "~~/components/assets/BuidlGuidlLogo";
+import { loadBurnerSK } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
+import { notification } from "~~/utils/scaffold-eth";
 
 export const SettingsDrawer = () => {
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrencyPrice);
+
+  const handlePrivateKeyCopy = () => {
+    if (window.confirm("Are you sure you want to copy your private key to the clipboard?") === false) return;
+
+    const sk = loadBurnerSK();
+    if (sk) {
+      navigator.clipboard.writeText(sk);
+      notification.success("Private key copied to clipboard");
+    }
+  };
 
   return (
     <Drawer direction="left">
@@ -32,6 +44,14 @@ export const SettingsDrawer = () => {
         <div className="flex flex-col gap-4 mb-4 px-8 mt-4">
           <div className="flex items-center justify-between">
             Dark Mode <SwitchTheme className="" />
+          </div>
+        </div>
+        <div className="flex flex-col gap-4 mb-4 px-8 mt-4">
+          <div className="flex items-center justify-between">
+            Private Key
+            <button className="btn btn-sm btn-ghost" onClick={handlePrivateKeyCopy}>
+              Copy to Clipboard
+            </button>
           </div>
         </div>
         <DrawerFooter className="pb-6 gap-4">
