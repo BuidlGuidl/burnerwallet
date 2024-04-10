@@ -90,6 +90,9 @@ module.exports = {
       colors: {
         "border-muted": "var(--border-muted)",
       },
+      fontFamily: {
+        sans: ["var(--font-onest)"],
+      },
     },
   },
 };

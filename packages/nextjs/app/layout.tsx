@@ -1,8 +1,15 @@
+import { Onest } from "next/font/google";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
+
+const onest = Onest({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-onest",
+});
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://burner.buidlguidl.com`
@@ -55,7 +62,7 @@ export const metadata: Metadata = {
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning className={onest.variable}>
       <body>
         <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
