@@ -5,7 +5,7 @@ import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+  ? `https://burner.buidlguidl.com`
   : `http://localhost:${process.env.PORT}`;
 const imageUrl = `${baseUrl}/thumbnail.jpg`;
 
