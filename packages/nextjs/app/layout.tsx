@@ -44,6 +44,13 @@ export const metadata: Metadata = {
   icons: {
     icon: [{ url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" }],
   },
+  other: {
+    "fc:frame": "vNext",
+    "fc:frame:image": imageUrl,
+    "fc:frame:button:1": "Create Burner Wallet",
+    "fc:frame:button:1:action": "link",
+    "fc:frame:button:1:target": baseUrl,
+  },
 };
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
