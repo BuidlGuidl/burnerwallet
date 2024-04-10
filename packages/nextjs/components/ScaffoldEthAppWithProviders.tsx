@@ -8,7 +8,6 @@ import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
 import { QrCodeReader } from "~~/components/burnerwallet/QrCodeReader";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
-import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
@@ -40,7 +39,6 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiConfig config={wagmiConfig}>
-      <ProgressBar />
       <RainbowKitProvider chains={appChains.chains} avatar={BlockieAvatar}>
         <ScaffoldEthApp>{children}</ScaffoldEthApp>
       </RainbowKitProvider>
