@@ -87,7 +87,11 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
                   : "0"}{" "}
                 ETH
               </p>
-              <button className="btn btn-primary mt-4" onClick={handleSend} disabled={sendDisabled}>
+              <button
+                className="btn btn-primary disabled:bg-primary/50 disabled:text-primary-content/50 mt-4"
+                onClick={handleSend}
+                disabled={sendDisabled}
+              >
                 Send
               </button>
               {sending && <p>Sending...</p>}

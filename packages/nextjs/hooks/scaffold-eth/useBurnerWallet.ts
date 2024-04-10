@@ -4,7 +4,7 @@ import { Chain, Hex, HttpTransport, PrivateKeyAccount, createWalletClient, http 
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { WalletClient, usePublicClient } from "wagmi";
 
-const burnerStorageKey = "scaffoldEth2.burnerWallet.sk";
+const burnerStorageKey = "metaPrivateKey";
 
 /**
  * Checks if the private key is valid

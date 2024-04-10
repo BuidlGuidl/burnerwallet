@@ -184,7 +184,7 @@ export const History = ({ address }: { address: string }) => {
     <>
       {history.map(historyItem => (
         <div key={historyItem.date} className="py-4 border-border-muted">
-          <h2 className="m-0 text-lg font-semibold leading-none">{historyItem.date}</h2>
+          <h2 className="m-0 font-semibold leading-none">{historyItem.date}</h2>
           <ul>
             {historyItem.items.map((item, index) => (
               <li key={`${historyItem.date}-${index}`} className="flex justify-between items-center gap-4 pt-4">
@@ -192,7 +192,7 @@ export const History = ({ address }: { address: string }) => {
                   {item.icon}
                 </div>
                 <div className="grow text-left flex flex-col">
-                  <p className="text-md font-semibold m-0">{item.categoryLabel}</p>
+                  <p className="text-md font-medium m-0">{item.categoryLabel}</p>
                   <div>
                     <Address address={item.address} format="short" disableAddressLink isSimpleView size="sm" />
                   </div>
