@@ -1,6 +1,12 @@
 "use client";
 
-import { ChevronLeftIcon, Cog6ToothIcon, CurrencyDollarIcon, HeartIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronLeftIcon,
+  Cog6ToothIcon,
+  CurrencyDollarIcon,
+  ExclamationTriangleIcon,
+  HeartIcon,
+} from "@heroicons/react/24/outline";
 import {
   Drawer,
   DrawerClose,
@@ -43,16 +49,36 @@ export const SettingsDrawer = () => {
         </DrawerHeader>
         <div className="flex flex-col gap-4 mb-4 px-8 mt-4">
           <div className="flex items-center justify-between">
-            Dark Mode <SwitchTheme className="" />
+            Dark Mode <SwitchTheme />
           </div>
-        </div>
-        <div className="flex flex-col gap-4 mb-4 px-8 mt-4">
-          <div className="flex items-center justify-between">
+          <div>
+            <div className="collapse collapse-arrow">
+              <input type="checkbox" />
+              <div className="collapse-title flex justify-between px-0">Private Key</div>
+              <div className="collapse-content text-sm px-0">
+                <div role="alert" className="alert alert-warning py-2 px-3">
+                  <p className="m-0 text-sm">Warning: Never Share Your Private Key With Anyone!</p>
+                </div>
+                <p>
+                  Your Private Key provides <strong>full access</strong> to your entire wallet and funds. This is
+                  currently stored <strong>temporarily</strong> in your browser.
+                </p>
+                <p>
+                  Be sure to securely import your Private Key into a more secure wallet if you have a substantial amount
+                  of assets.
+                </p>
+                <button className="btn btn-sm btn-outline btn-error" onClick={handlePrivateKeyCopy}>
+                  <ExclamationTriangleIcon className="w-4 h-4" /> Copy Private Key To Clipboard
+                </button>
+              </div>
+            </div>
+          </div>
+          {/* <div className="flex items-center justify-between mt-4">
             Private Key
             <button className="btn btn-sm btn-ghost" onClick={handlePrivateKeyCopy}>
               Copy to Clipboard
             </button>
-          </div>
+          </div> */}
         </div>
         <DrawerFooter className="pb-6 gap-4">
           {nativeCurrencyPrice > 0 && (
