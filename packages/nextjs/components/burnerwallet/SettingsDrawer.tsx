@@ -40,45 +40,39 @@ export const SettingsDrawer = () => {
       <DrawerTrigger className="btn btn-sm btn-ghost text-white">
         <Cog6ToothIcon className="w-6" />
       </DrawerTrigger>
-      <DrawerContent className="flex flex-col h-full w-[80%] md:w-[400px] fixed bottom-0 left-0 rounded-tl-none">
+      <DrawerContent className="flex flex-col h-full w-[85%] md:w-[400px] fixed bottom-0 left-0 rounded-tl-none">
         <DrawerHeader className="gap-0">
           <DrawerClose className="btn btn-sm btn-circle btn-ghost">
             <ChevronLeftIcon className="w-6 h-6" />
           </DrawerClose>
           <DrawerTitle className="text-xl md:text-2xl">Settings</DrawerTitle>
         </DrawerHeader>
-        <div className="flex flex-col gap-4 mb-4 px-8 mt-4">
+        <div className="flex flex-col gap-2 px-8 mt-2">
           <div className="flex items-center justify-between">
             Dark Mode <SwitchTheme />
           </div>
-          <div>
-            <div className="collapse collapse-arrow">
-              <input type="checkbox" />
-              <div className="collapse-title flex justify-between px-0">Private Key</div>
-              <div className="collapse-content text-sm px-0">
-                <div role="alert" className="alert alert-warning py-2 px-3">
-                  <p className="m-0 text-sm">Warning: Never Share Your Private Key With Anyone!</p>
-                </div>
-                <p>
-                  Your Private Key provides <strong>full access</strong> to your entire wallet and funds. This is
-                  currently stored <strong>temporarily</strong> in your browser.
-                </p>
-                <p>
-                  Be sure to securely import your Private Key into a more secure wallet if you have a substantial amount
-                  of assets.
-                </p>
-                <button className="btn btn-sm btn-outline btn-error" onClick={handlePrivateKeyCopy}>
-                  <ExclamationTriangleIcon className="w-4 h-4" /> Copy Private Key To Clipboard
-                </button>
+
+          <div className="collapse collapse-arrow">
+            <input type="checkbox" />
+            <div className="collapse-title flex justify-between px-0">Private Key</div>
+            <div className="collapse-content text-sm md:text-base px-0">
+              <div role="alert" className="alert alert-warning py-2 px-3 gap-2 md:gap-4 grid-flow-col">
+                <ExclamationTriangleIcon className="w-4 h-4 md:w-6 md:h-6" />
+                <p className="m-0 text-left">Warning: Never Share Your Private Key With Anyone!</p>
               </div>
+              <p>
+                Your Private Key provides <strong>full access</strong> to your entire wallet and funds. This is
+                currently stored <strong>temporarily</strong> in your browser.
+              </p>
+              <p>
+                Be sure to securely import your Private Key into a more secure wallet if you have a substantial amount
+                of assets.
+              </p>
+              <button className="btn btn-sm h-auto py-2 btn-outline btn-error" onClick={handlePrivateKeyCopy}>
+                Copy Private Key To Clipboard
+              </button>
             </div>
           </div>
-          {/* <div className="flex items-center justify-between mt-4">
-            Private Key
-            <button className="btn btn-sm btn-ghost" onClick={handlePrivateKeyCopy}>
-              Copy to Clipboard
-            </button>
-          </div> */}
         </div>
         <DrawerFooter className="pb-6 gap-4">
           {nativeCurrencyPrice > 0 && (
