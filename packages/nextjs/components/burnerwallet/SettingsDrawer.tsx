@@ -37,17 +37,17 @@ export const SettingsDrawer = () => {
 
   return (
     <Drawer direction="left">
-      <DrawerTrigger className="btn btn-sm btn-ghost text-white">
+      <DrawerTrigger className="px-1 btn btn-sm btn-ghost text-white">
         <Cog6ToothIcon className="w-6" />
       </DrawerTrigger>
       <DrawerContent className="flex flex-col h-full w-[85%] md:w-[400px] fixed bottom-0 left-0 rounded-tl-none">
-        <DrawerHeader className="gap-0">
+        <DrawerHeader className="grid grid-cols-3 items-center gap-0">
           <DrawerClose className="btn btn-sm btn-circle btn-ghost">
             <ChevronLeftIcon className="w-6 h-6" />
           </DrawerClose>
-          <DrawerTitle className="text-xl md:text-2xl">Settings</DrawerTitle>
+          <DrawerTitle className="m-0 text-xl md:text-2xl">Settings</DrawerTitle>
         </DrawerHeader>
-        <div className="flex flex-col gap-2 px-8 mt-2">
+        <div className="flex flex-col gap-2 px-6 mt-1">
           <div className="flex items-center justify-between">
             Dark Mode <SwitchTheme />
           </div>
