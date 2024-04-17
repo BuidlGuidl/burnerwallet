@@ -43,9 +43,10 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
     if (isConfirmed && transactionData) {
       setSending(false);
       setAmount("");
+      setToAddress("");
       notification.success("Sent! " + transactionData.hash);
     }
-  }, [isConfirmed, transactionData]);
+  }, [isConfirmed, setToAddress, transactionData]);
 
   const sendDisabled =
     sending ||
