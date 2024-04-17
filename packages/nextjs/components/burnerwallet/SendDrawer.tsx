@@ -19,7 +19,6 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
 
   const [amount, setAmount] = useState<string>("");
   const [sending, setSending] = useState(false);
-  const [transactionHash, setTransactionHash] = useState<string>("");
 
   const {
     data: ethBalance,
@@ -42,7 +41,6 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
 
   useEffect(() => {
     if (isConfirmed && transactionData) {
-      setTransactionHash(transactionData.hash);
       setSending(false);
       setAmount("");
       notification.success("Sent! " + transactionData.hash);
@@ -92,10 +90,14 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
                 onClick={handleSend}
                 disabled={sendDisabled}
               >
-                Send
+                {sending ? (
+                  <>
+                    <span className="loading loading-spinner loading-xs"></span> Sending...
+                  </>
+                ) : (
+                  "Send"
+                )}
               </button>
-              {sending && <p>Sending...</p>}
-              {isConfirmed && <p>Sent! {transactionHash}</p>}
             </div>
           </div>
         </div>
