@@ -28,7 +28,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
     address,
   });
 
-  const { data: transactionData, sendTransaction } = useSendTransaction();
+  const { data: transactionData, sendTransaction, reset } = useSendTransaction();
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransaction({
     hash: transactionData?.hash,
@@ -44,9 +44,10 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
       setSending(false);
       setAmount("");
       setToAddress("");
+      reset(); // resets the useSendTransaction data
       notification.success("Sent! " + transactionData.hash);
     }
-  }, [isConfirmed, setToAddress, transactionData]);
+  }, [isConfirmed, setToAddress, transactionData, reset]);
 
   const sendDisabled =
     sending ||
