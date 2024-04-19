@@ -46,12 +46,23 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
     }
   }, [isConfirmed, setToAddress, transactionData, reset]);
 
-  const sendDisabled =
-    sending ||
-    isConfirming ||
-    !toAddress ||
-    !amount ||
-    (ethBalance && parseFloat(amount) > parseFloat(formatEther(ethBalance.value || 0n)));
+  const isInsufficientFunds = ethBalance && parseFloat(amount) > parseFloat(formatEther(ethBalance.value || 0n));
+
+  const sendDisabled = sending || isConfirming || !toAddress || !amount || isInsufficientFunds;
+
+  let buttonText = <span>Send</span>;
+
+  if (isInsufficientFunds) {
+    buttonText = <span>Insufficient Funds</span>;
+  }
+
+  if (sending && !isInsufficientFunds) {
+    buttonText = (
+      <>
+        <span className="loading loading-spinner loading-xs"></span> Sending...
+      </>
+    );
+  }
 
   return (
     <Drawer>
@@ -86,13 +97,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
                 onClick={handleSend}
                 disabled={sendDisabled}
               >
-                {sending ? (
-                  <>
-                    <span className="loading loading-spinner loading-xs"></span> Sending...
-                  </>
-                ) : (
-                  "Send"
-                )}
+                {buttonText}
               </button>
             </div>
           </div>
