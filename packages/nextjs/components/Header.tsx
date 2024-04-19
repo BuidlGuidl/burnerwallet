@@ -1,13 +1,14 @@
 "use client";
 
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { useLocalStorage } from "usehooks-ts";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { NetworksDropdown } from "~~/components/NetworksDropdown";
 import { ReceiveDrawer } from "~~/components/burnerwallet/ReceiveDrawer";
 import { SendDrawer } from "~~/components/burnerwallet/SendDrawer";
 import { SettingsDrawer } from "~~/components/burnerwallet/SettingsDrawer";
 import { Address, Balance } from "~~/components/scaffold-eth";
-import { useAutoConnect } from "~~/hooks/scaffold-eth";
+import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, useAutoConnect } from "~~/hooks/scaffold-eth";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
 
 const networks = getTargetNetworks();
@@ -18,8 +19,13 @@ const networks = getTargetNetworks();
 export const Header = () => {
   useAutoConnect();
 
+  const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
   const { address: connectedAddress } = useAccount();
-  const { switchNetwork } = useSwitchNetwork();
+  const { switchNetwork } = useSwitchNetwork({
+    onSuccess(data) {
+      setChainId(data.id);
+    },
+  });
   const { chain } = useNetwork();
 
   return (
