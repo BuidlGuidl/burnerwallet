@@ -176,7 +176,11 @@ export const History = ({ address }: { address: string }) => {
   }, [address, chain, publicClient, allCategories, alchemy]);
 
   if (isLoading) {
-    return <p className="text-center">Loading...</p>;
+    return (
+      <p className="flex items-center justify-center gap-2">
+        <span className="loading loading-spinner loading-sm"></span> Loading...
+      </p>
+    );
   }
 
   if (history.length === 0) {
