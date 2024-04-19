@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Address } from "../../components/scaffold-eth";
+import { TransactionHashLink } from "./TransactionHashLink";
 import { Alchemy, AssetTransfersCategory, AssetTransfersResponse, Network } from "alchemy-sdk";
 import { createPublicClient, hexToBigInt, http } from "viem";
 import * as chains from "viem/chains";
@@ -20,6 +20,7 @@ type HistoryItem = {
   address: string;
   value: number;
   asset: string | null;
+  hash: `0x${string}`;
   type: "sent" | "received";
   category: AssetTransfersCategory;
   categoryLabel: string;
@@ -118,6 +119,7 @@ export const History = ({ address }: { address: string }) => {
             address: item.to,
             value: item.value,
             asset: item.asset,
+            hash: item.hash,
             type: "sent",
             category: item.category,
             categoryLabel: item.category === AssetTransfersCategory.EXTERNAL ? "Sent" : categoryToLabel[item.category],
@@ -138,6 +140,7 @@ export const History = ({ address }: { address: string }) => {
             address: item.from,
             value: item.value,
             asset: item.asset,
+            hash: item.hash,
             type: "received",
             category: item.category,
             categoryLabel:
@@ -193,9 +196,7 @@ export const History = ({ address }: { address: string }) => {
                 </div>
                 <div className="grow text-left flex flex-col">
                   <p className="text-md font-medium m-0">{item.categoryLabel}</p>
-                  <div>
-                    <Address address={item.address} format="short" disableAddressLink isSimpleView size="sm" />
-                  </div>
+                  <TransactionHashLink hash={item.hash} chainId={chain?.id || 1} />
                 </div>
                 <div>
                   {item.value ? (
