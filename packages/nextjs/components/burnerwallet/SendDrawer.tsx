@@ -88,10 +88,10 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
                 disableMultiplyBy1e18={true}
                 onChange={value => setAmount(value.toString())}
               />
-              <p className="flex items-center justify-center m-0">
+              <div className="flex items-center justify-center m-0">
                 Balance:
                 <Balance address={address} className="text-base" />
-              </p>
+              </div>
               <button
                 className="btn btn-primary disabled:bg-primary/50 disabled:text-primary-content/50 mt-4"
                 onClick={handleSend}
