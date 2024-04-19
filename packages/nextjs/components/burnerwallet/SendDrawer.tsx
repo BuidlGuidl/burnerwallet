@@ -5,6 +5,7 @@ import { Address as AddressType, formatEther, parseEther } from "viem";
 import { useBalance, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
+import { Balance } from "~~/components/scaffold-eth";
 import { AddressInput, IntegerInput } from "~~/components/scaffold-eth/Input";
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth";
@@ -20,11 +21,7 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
   const [amount, setAmount] = useState<string>("");
   const [sending, setSending] = useState(false);
 
-  const {
-    data: ethBalance,
-    isError: isErrorGettingEthBalance,
-    isLoading: isLoadingGettingEthBalance,
-  } = useBalance({
+  const { data: ethBalance } = useBalance({
     address,
   });
 
@@ -80,12 +77,9 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
                 disableMultiplyBy1e18={true}
                 onChange={value => setAmount(value.toString())}
               />
-              <p className="m-0 text-center">
-                Balance:{" "}
-                {!isErrorGettingEthBalance && !isLoadingGettingEthBalance && ethBalance
-                  ? formatEther(ethBalance.value)
-                  : "0"}{" "}
-                ETH
+              <p className="flex items-center justify-center m-0">
+                Balance:
+                <Balance address={address} className="text-base" />
               </p>
               <button
                 className="btn btn-primary disabled:bg-primary/50 disabled:text-primary-content/50 mt-4"
