@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Address } from "../../components/scaffold-eth";
 import { Alchemy, AssetTransfersCategory, AssetTransfersResponse, Network } from "alchemy-sdk";
 import { createPublicClient, hexToBigInt, http } from "viem";
 import * as chains from "viem/chains";
@@ -32,7 +31,7 @@ type HistoryItemByDate = {
   items: HistoryItem[];
 };
 
-export const History = ({ address }: { address: string }) => {
+export const useGetHistory = ({ address }: { address: string }) => {
   const { chain } = useNetwork();
 
   const allCategories = useMemo(() => {
@@ -173,46 +172,9 @@ export const History = ({ address }: { address: string }) => {
     }
   }, [address, chain, updateHistory]);
 
-  if (isLoading) {
-    return <p className="text-center">Loading...</p>;
-  }
-
-  if (history.length === 0) {
-    return <p className="text-center">No history</p>;
-  }
-
-  return (
-    <>
-      {history.map(historyItem => (
-        <div key={historyItem.date} className="py-4 border-border-muted">
-          <h2 className="m-0 font-semibold leading-none">{historyItem.date}</h2>
-          <ul>
-            {historyItem.items.map((item, index) => (
-              <li key={`${historyItem.date}-${index}`} className="flex justify-between items-center gap-4 pt-4">
-                <div className="flex flex-shrink-0 items-center justify-center w-10 h-10 bg-secondary text-secondary-content rounded-full">
-                  {item.icon}
-                </div>
-                <div className="grow text-left flex flex-col">
-                  <p className="text-md font-medium m-0">{item.categoryLabel}</p>
-                  <div>
-                    <Address address={item.address} format="short" disableAddressLink isSimpleView size="sm" />
-                  </div>
-                </div>
-                <div>
-                  {item.value ? (
-                    <>
-                      {item.type === "sent" ? "-" : "+"}
-                      {item.value} {item.asset}
-                    </>
-                  ) : (
-                    "0"
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </>
-  );
+  return {
+    history,
+    isLoading,
+    updateHistory,
+  };
 };
