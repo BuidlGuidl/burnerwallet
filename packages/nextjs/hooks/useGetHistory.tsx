@@ -19,6 +19,7 @@ type HistoryItem = {
   address: string;
   value: number;
   asset: string | null;
+  hash: `0x${string}`;
   type: "sent" | "received";
   category: AssetTransfersCategory;
   categoryLabel: string;
@@ -116,6 +117,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
           address: item.to,
           value: item.value,
           asset: item.asset,
+          hash: item.hash,
           type: "sent",
           category: item.category,
           categoryLabel: item.category === AssetTransfersCategory.EXTERNAL ? "Sent" : categoryToLabel[item.category],
@@ -136,6 +138,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
           address: item.from,
           value: item.value,
           asset: item.asset,
+          hash: item.hash,
           type: "received",
           category: item.category,
           categoryLabel:
@@ -173,6 +176,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
   }, [address, chain, updateHistory]);
 
   return {
+    chain,
     history,
     isLoading,
     updateHistory,
