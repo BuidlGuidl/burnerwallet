@@ -7,6 +7,7 @@ import { getTargetNetworks } from "~~/utils/scaffold-eth";
 
 const SCAFFOLD_WALLET_STORAGE_KEY = "scaffoldEth2.wallet";
 const WAGMI_WALLET_STORAGE_KEY = "wagmi.wallet";
+export const SCAFFOLD_CHAIN_ID_STORAGE_KEY = "scaffoldEth2.chainId";
 
 // ID of the SAFE connector instance
 const SAFE_ID = "safe";
@@ -61,6 +62,7 @@ export const useAutoConnect = (): void => {
   const [walletId, setWalletId] = useLocalStorage<string>(SCAFFOLD_WALLET_STORAGE_KEY, wagmiWalletValue ?? "", {
     initializeWithValue: false,
   });
+  const savedChainId = useReadLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY);
   const connectState = useConnect();
   useAccount({
     onConnect({ connector }) {
@@ -73,10 +75,14 @@ export const useAutoConnect = (): void => {
   });
 
   useEffectOnce(() => {
-    const initialConnector = getInitialConnector(getTargetNetworks()[0], walletId, connectState.connectors);
+    const targetNetwork = savedChainId
+      ? getTargetNetworks().find(n => n.id === savedChainId) ?? getTargetNetworks()[0]
+      : getTargetNetworks()[0];
+
+    const initialConnector = getInitialConnector(targetNetwork, walletId, connectState.connectors);
 
     if (initialConnector?.connector) {
-      connectState.connect({ connector: initialConnector.connector, chainId: initialConnector.chainId });
+      connectState.connect({ connector: initialConnector.connector, chainId: targetNetwork.id });
     }
   });
 };

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Address } from "../../components/scaffold-eth";
+import { TransactionHashLink } from "./TransactionHashLink";
 import { Alchemy, AssetTransfersCategory, AssetTransfersResponse, Network } from "alchemy-sdk";
 import { createPublicClient, hexToBigInt, http } from "viem";
 import * as chains from "viem/chains";
@@ -20,6 +20,7 @@ type HistoryItem = {
   address: string;
   value: number;
   asset: string | null;
+  hash: `0x${string}`;
   type: "sent" | "received";
   category: AssetTransfersCategory;
   categoryLabel: string;
@@ -168,13 +169,99 @@ export const History = ({ address }: { address: string }) => {
   }, [address, alchemy.core, allCategories, publicClient]);
 
   useEffect(() => {
+    const updateHistory = async () => {
+      setIsLoading(true);
+
+      const dataFrom: AssetTransfersResponse = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        fromAddress: address,
+        category: allCategories,
+      });
+
+      const dataTo: AssetTransfersResponse = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        toAddress: address,
+        category: allCategories,
+      });
+
+      const dataFromBlockNumbers = dataFrom.transfers.map(item => item.blockNum);
+      const dataToBlockNumbers = dataTo.transfers.map(item => item.blockNum);
+
+      const blockNumbers = dataFromBlockNumbers.concat(dataToBlockNumbers);
+      const blocksData = await Promise.all(
+        blockNumbers.map(blockNumber =>
+          publicClient.getBlock({ blockNumber: hexToBigInt(blockNumber as `0x${string}`) }),
+        ),
+      );
+
+      const historyFrom = dataFrom.transfers.map(
+        item =>
+          ({
+            address: item.to,
+            value: item.value,
+            asset: item.asset,
+            hash: item.hash,
+            type: "sent",
+            category: item.category,
+            categoryLabel: item.category === AssetTransfersCategory.EXTERNAL ? "Sent" : categoryToLabel[item.category],
+            timestamp:
+              blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
+            icon:
+              item.category === AssetTransfersCategory.INTERNAL ? (
+                <ArrowPathIcon className="w-5" />
+              ) : (
+                <PaperAirplaneIcon className="w-5" />
+              ),
+          } as HistoryItem),
+      );
+
+      const historyTo = dataTo.transfers.map(
+        item =>
+          ({
+            address: item.from,
+            value: item.value,
+            asset: item.asset,
+            hash: item.hash,
+            type: "received",
+            category: item.category,
+            categoryLabel:
+              item.category === AssetTransfersCategory.EXTERNAL ? "Received" : categoryToLabel[item.category],
+            timestamp:
+              blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
+            icon:
+              item.category === AssetTransfersCategory.INTERNAL ? (
+                <ArrowPathIcon className="w-5" />
+              ) : (
+                <ArrowDownTrayIcon className="w-5" />
+              ),
+          } as HistoryItem),
+      );
+      const history = historyFrom.concat(historyTo);
+      const sortedHistory = history.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+      const historyByDate: HistoryItemByDate[] = [];
+      let lastDate = "";
+      sortedHistory.forEach(item => {
+        const date = new Date(Number(item.timestamp * 1000n)).toDateString();
+        if (date !== lastDate) {
+          lastDate = date;
+          historyByDate.push({ date, items: [] });
+        }
+        historyByDate[historyByDate.length - 1].items.push(item);
+      });
+      setHistory(historyByDate);
+      setIsLoading(false);
+    };
     if (address && chain) {
       updateHistory();
     }
   }, [address, chain, updateHistory]);
 
   if (isLoading) {
-    return <p className="text-center">Loading...</p>;
+    return (
+      <p className="flex items-center justify-center gap-2">
+        <span className="loading loading-spinner loading-sm"></span> Loading...
+      </p>
+    );
   }
 
   if (history.length === 0) {
@@ -194,9 +281,7 @@ export const History = ({ address }: { address: string }) => {
                 </div>
                 <div className="grow text-left flex flex-col">
                   <p className="text-md font-medium m-0">{item.categoryLabel}</p>
-                  <div>
-                    <Address address={item.address} format="short" disableAddressLink isSimpleView size="sm" />
-                  </div>
+                  <TransactionHashLink hash={item.hash} chainId={chain?.id || 1} />
                 </div>
                 <div>
                   {item.value ? (
