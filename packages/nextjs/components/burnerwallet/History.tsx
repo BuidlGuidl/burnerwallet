@@ -1,9 +1,13 @@
 import { TransactionHashLink } from "./TransactionHashLink";
-import { useGetHistory } from "~~/hooks/useGetHistory";
+import type { HistoryItemByDate } from "~~/hooks/useGetHistory";
 
-export const History = ({ address }: { address: string }) => {
-  const { chain, isLoading, history } = useGetHistory({ address });
+type HistoryProps = {
+  chainId: number;
+  isLoading: boolean;
+  history: HistoryItemByDate[];
+};
 
+export const History = ({ chainId, isLoading, history }: HistoryProps) => {
   if (isLoading) {
     return (
       <p className="flex items-center justify-center gap-2">
@@ -29,7 +33,7 @@ export const History = ({ address }: { address: string }) => {
                 </div>
                 <div className="grow text-left flex flex-col">
                   <p className="text-md font-medium m-0">{item.categoryLabel}</p>
-                  <TransactionHashLink hash={item.hash} chainId={chain?.id || 1} />
+                  <TransactionHashLink hash={item.hash} chainId={chainId} />
                 </div>
                 <div>
                   {item.value ? (

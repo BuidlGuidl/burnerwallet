@@ -15,7 +15,7 @@ const categoryToLabel = {
   [AssetTransfersCategory.SPECIALNFT]: "NFT",
 };
 
-type HistoryItem = {
+export type HistoryItem = {
   address: string;
   value: number;
   asset: string | null;
@@ -27,7 +27,7 @@ type HistoryItem = {
   icon: JSX.Element;
 };
 
-type HistoryItemByDate = {
+export type HistoryItemByDate = {
   date: string;
   items: HistoryItem[];
 };
@@ -176,7 +176,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
   }, [address, chain, updateHistory]);
 
   return {
-    chain,
+    chainId: chain?.id || 1,
     history,
     isLoading,
     updateHistory,
