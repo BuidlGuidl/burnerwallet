@@ -12,9 +12,10 @@ import { notification } from "~~/utils/scaffold-eth";
 
 type SendDrawerProps = {
   address?: AddressType;
+  updateHistory: () => void;
 };
 
-export const SendDrawer = ({ address }: SendDrawerProps) => {
+export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
   const toAddress = useGlobalState(state => state.sendEthToAddress);
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
   const { chain } = useNetwork();
@@ -51,12 +52,13 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
   useEffect(() => {
     if (isConfirmed && transactionData) {
       setSending(false);
+      updateHistory();
       setAmount("");
       setToAddress("");
       reset(); // resets the useSendTransaction data
       notification.success("Sent! " + transactionData.hash);
     }
-  }, [isConfirmed, setToAddress, transactionData, reset]);
+  }, [isConfirmed, setToAddress, transactionData, reset, updateHistory]);
 
   const isInsufficientFunds = ethBalance && parseFloat(amount) > parseFloat(formatEther(ethBalance.value || 0n));
 
