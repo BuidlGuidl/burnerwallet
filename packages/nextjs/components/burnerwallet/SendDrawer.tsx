@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Address as AddressType, formatEther, parseEther } from "viem";
-import { useBalance, useSendTransaction, useWaitForTransaction } from "wagmi";
+import { useBalance, useNetwork, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
 import { Balance } from "~~/components/scaffold-eth";
@@ -17,6 +17,7 @@ type SendDrawerProps = {
 export const SendDrawer = ({ address }: SendDrawerProps) => {
   const toAddress = useGlobalState(state => state.sendEthToAddress);
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
+  const { chain } = useNetwork();
 
   const [amount, setAmount] = useState<string>("");
   const [sending, setSending] = useState(false);
@@ -25,7 +26,18 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
     address,
   });
 
-  const { data: transactionData, sendTransaction, reset } = useSendTransaction();
+  const {
+    data: transactionData,
+    sendTransaction,
+    reset,
+    error,
+  } = useSendTransaction({
+    chainId: chain?.id,
+  });
+
+  if (error) {
+    console.log("error", error);
+  }
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransaction({
     hash: transactionData?.hash,
@@ -92,13 +104,33 @@ export const SendDrawer = ({ address }: SendDrawerProps) => {
                 Balance:
                 <Balance address={address} className="text-base" />
               </div>
-              <button
-                className="btn btn-primary disabled:bg-primary/50 disabled:text-primary-content/50 mt-4"
-                onClick={handleSend}
-                disabled={sendDisabled}
-              >
-                {buttonText}
-              </button>
+              {!error && (
+                <button
+                  className="btn btn-primary disabled:bg-primary/50 disabled:text-primary-content/50 mt-4"
+                  onClick={handleSend}
+                  disabled={sendDisabled}
+                >
+                  {buttonText}
+                </button>
+              )}
+              {error && (
+                <div role="alert" className="alert alert-error">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="stroke-current shrink-0 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>There was an error</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
