@@ -22,6 +22,7 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
 
   const [amount, setAmount] = useState<string>("");
   const [sending, setSending] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { data: ethBalance } = useBalance({
     address,
@@ -54,14 +55,16 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
     sendTransaction({ to: toAddress, value: parseEther(amount) });
   };
 
+  // All the resets that happen once `useWaitForTransaction` is complete
   useEffect(() => {
     if (isConfirmed && transactionData) {
+      notification.success("Sent! " + transactionData.hash);
       setSending(false);
       updateHistory();
       setAmount("");
       setToAddress("");
       reset(); // resets the useSendTransaction data
-      notification.success("Sent! " + transactionData.hash);
+      setIsOpen(false);
     }
   }, [isConfirmed, setToAddress, transactionData, reset, updateHistory]);
 
@@ -85,7 +88,7 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
   }
 
   return (
-    <Drawer>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger id="send-eth-drawer" className="btn btn-neutral bg-white/50">
         <PaperAirplaneIcon className="w-6" /> Send
       </DrawerTrigger>
