@@ -95,14 +95,14 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
       <DrawerContent>
         <DrawerLine />
         <DrawerHeader>
-          <DrawerTitle className="mt-1 text-xl md:text-2xl">Send</DrawerTitle>
+          <DrawerTitle className="mt-1 text-2xl">Send</DrawerTitle>
         </DrawerHeader>
         <div>
-          <div className="max-w-lg mx-auto">
-            <div className="flex flex-col gap-4 px-6 pb-6">
+          <div className="max-w-lg mx-auto mt-4">
+            <div className="flex flex-col gap-4 px-6">
               <AddressInput
                 value={toAddress}
-                placeholder="Enter recipient address"
+                placeholder="Enter recipient ENS or 0xAddress"
                 onChange={value => setToAddress(value)}
               />
               <IntegerInput
@@ -111,13 +111,15 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
                 disableMultiplyBy1e18={true}
                 onChange={value => setAmount(value.toString())}
               />
-              <div className="flex items-center justify-center m-0">
+            </div>
+            <div className="flex flex-col gap-8 mt-2 px-6 pb-12">
+              <div className="flex items-center justify-center m-0 text-lg">
                 Balance:
-                <Balance address={address} className="text-base" />
+                <Balance address={address} className="text-lg" />
               </div>
               {!error && (
                 <button
-                  className="btn btn-primary disabled:bg-primary/50 disabled:text-primary-content/50 mt-4"
+                  className="btn btn-primary text-lg h-14 min-h-14 disabled:bg-primary/50 disabled:text-primary-content/50"
                   onClick={handleSend}
                   disabled={sendDisabled}
                 >
