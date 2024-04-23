@@ -40,7 +40,12 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
     console.log("error", error);
   }
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransaction({
+  const {
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+    isIdle,
+  } = useWaitForTransaction({
+    chainId: chain?.id,
     hash: transactionData?.hash,
   });
 
@@ -60,7 +65,8 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
     }
   }, [isConfirmed, setToAddress, transactionData, reset, updateHistory]);
 
-  const isInsufficientFunds = ethBalance && parseFloat(amount) > parseFloat(formatEther(ethBalance.value || 0n));
+  const isInsufficientFunds =
+    isIdle && ethBalance && parseFloat(amount) > parseFloat(formatEther(ethBalance.value || 0n));
 
   const sendDisabled = sending || isConfirming || !toAddress || !amount || isInsufficientFunds;
 
