@@ -17,7 +17,7 @@ export const ReceiveDrawer = ({ address }: ReceiveDrawerProps) => {
       <DrawerContent>
         <DrawerLine />
         <DrawerHeader>
-          <DrawerTitle className="mt-1 text-xl md:text-2xl">Receive</DrawerTitle>
+          <DrawerTitle className="mt-1 text-2xl">Receive</DrawerTitle>
         </DrawerHeader>
         <div className="flex flex-col items-center gap-4 mb-4 px-4">
           {address && (
