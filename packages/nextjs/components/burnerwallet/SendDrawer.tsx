@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Address as AddressType, formatEther, parseEther } from "viem";
+import { Address as AddressType, formatEther, isAddress, parseEther } from "viem";
 import { useBalance, useNetwork, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
@@ -18,6 +18,7 @@ type SendDrawerProps = {
 export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
   const toAddress = useGlobalState(state => state.sendEthToAddress);
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
+  const isValidAddress = isAddress(toAddress);
   const { chain } = useNetwork();
 
   const [amount, setAmount] = useState<string>("");
@@ -71,12 +72,16 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
   const isInsufficientFunds =
     isIdle && ethBalance && parseFloat(amount) > parseFloat(formatEther(ethBalance.value || 0n));
 
-  const sendDisabled = sending || isConfirming || !toAddress || !amount || isInsufficientFunds;
+  const sendDisabled = sending || isConfirming || !isValidAddress || !amount || isInsufficientFunds;
 
   let buttonText = <span>Send</span>;
 
   if (isInsufficientFunds) {
     buttonText = <span>Insufficient Funds</span>;
+  }
+
+  if (toAddress && !isValidAddress) {
+    buttonText = <span>Enter a valid address or ENS</span>;
   }
 
   if (sending && !isInsufficientFunds) {
