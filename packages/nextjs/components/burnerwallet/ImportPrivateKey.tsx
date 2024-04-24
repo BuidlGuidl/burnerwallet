@@ -44,9 +44,9 @@ export const ImportPrivateKey = () => {
           }}
         />
         {hasError && (
-          <div role="alert" className="alert alert-error mt-4 text-sm">
-            <XCircleIcon className="h-6 w-6" />
-            <span>Please enter a valid Private Key</span>
+          <div role="alert" className="alert alert-error mt-4 py-2 px-3 gap-2 md:gap-4 flex">
+            <XCircleIcon className="w-4 h-4 md:w-6 md:h-6" />
+            <p className="m-0 text-left">Please enter a valid Private Key</p>
           </div>
         )}
         <button className="h-auto py-2 mt-4 btn btn-sm btn-outline btn-error" onClick={onImport}>
