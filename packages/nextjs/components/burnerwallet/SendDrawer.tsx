@@ -5,8 +5,8 @@ import { Address as AddressType, formatEther, parseEther } from "viem";
 import { useBalance, useNetwork, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle, DrawerTrigger } from "~~/components/Drawer";
-import { Balance } from "~~/components/scaffold-eth";
-import { AddressInput, IntegerInput } from "~~/components/scaffold-eth/Input";
+import { Balance, EtherInput } from "~~/components/scaffold-eth";
+import { AddressInput } from "~~/components/scaffold-eth/Input";
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth";
 
@@ -105,12 +105,7 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
                 placeholder="Enter recipient ENS or 0xAddress"
                 onChange={value => setToAddress(value)}
               />
-              <IntegerInput
-                value={amount}
-                placeholder="0.00 ETH"
-                disableMultiplyBy1e18={true}
-                onChange={value => setAmount(value.toString())}
-              />
+              <EtherInput value={amount} placeholder="0.00 ETH" onChange={value => setAmount(value.toString())} />
             </div>
             <div className="flex flex-col gap-8 mt-2 px-6 pb-12">
               <div className="flex items-center justify-center m-0 text-lg">
