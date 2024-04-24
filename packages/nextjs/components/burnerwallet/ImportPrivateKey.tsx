@@ -4,19 +4,25 @@ import { useCallback, useState } from "react";
 import { InputBase } from "../scaffold-eth";
 import { useLocalStorage } from "usehooks-ts";
 import { Hex } from "viem";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { burnerStorageKey, isValidSk } from "~~/hooks/scaffold-eth/useBurnerWallet";
 
 export const ImportPrivateKey = () => {
   const [value, setValue] = useState<string | Hex>("");
+  const [hasError, setHasError] = useState(false);
   const [, setBurnerSk] = useLocalStorage<Hex>(burnerStorageKey, "0x");
 
-  const onSave = useCallback(() => {
+  const onImport = useCallback(() => {
+    if (window.confirm("Are you sure you want to REPLACE this burner wallet?") === false) return;
+
     if (isValidSk(value)) {
+      setHasError(false);
       setBurnerSk(value as Hex);
       window.location.reload();
       return;
     }
+
+    setHasError(true);
   }, [setBurnerSk, value]);
 
   return (
@@ -32,11 +38,18 @@ export const ImportPrivateKey = () => {
         <InputBase
           value={value}
           placeholder="0xPrivateKey"
+          error={hasError}
           onChange={newValue => {
             setValue(newValue);
           }}
         />
-        <button className="h-auto py-2 mt-4 btn btn-sm btn-outline btn-error" onClick={onSave}>
+        {hasError && (
+          <div role="alert" className="alert alert-error mt-4 text-sm">
+            <XCircleIcon className="h-6 w-6" />
+            <span>Please enter a valid Private Key</span>
+          </div>
+        )}
+        <button className="h-auto py-2 mt-4 btn btn-sm btn-outline btn-error" onClick={onImport}>
           Import Private Key
         </button>
       </div>
