@@ -48,7 +48,7 @@ export const SettingsDrawer = () => {
           </DrawerClose>
           <DrawerTitle className="m-0 text-xl md:text-2xl">Settings</DrawerTitle>
         </DrawerHeader>
-        <div className="flex flex-col gap-2 px-6 mt-1 divide-y divide-slate-700">
+        <div className="flex flex-col gap-2 px-6 mt-1 divide-y divide-border-muted">
           <div className="flex items-center justify-between mb-1">
             Dark Mode <SwitchTheme />
           </div>
