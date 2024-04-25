@@ -48,7 +48,7 @@ export const SettingsDrawer = () => {
           </DrawerClose>
           <DrawerTitle className="m-0 text-xl md:text-2xl">Settings</DrawerTitle>
         </DrawerHeader>
-        <div className="flex flex-col gap-2 px-6 mt-1 divide-y divide-border-muted">
+        <div className="flex flex-col gap-2 px-6 mt-1 divide-y divide-border-muted bg-base-200">
           <div className="flex items-center justify-between mb-1">
             Dark Mode <SwitchTheme />
           </div>
@@ -77,7 +77,7 @@ export const SettingsDrawer = () => {
 
           <ImportPrivateKey />
         </div>
-        <DrawerFooter className="pb-4 gap-2">
+        <DrawerFooter className="pb-4 gap-2 bg-base-200">
           {nativeCurrencyPrice > 0 && (
             <div>
               <div className="btn btn-primary btn-sm font-normal gap-1 cursor-auto">
