@@ -48,14 +48,14 @@ export const SettingsDrawer = () => {
           </DrawerClose>
           <DrawerTitle className="m-0 text-xl md:text-2xl">Settings</DrawerTitle>
         </DrawerHeader>
-        <div className="flex flex-col gap-2 px-6 mt-1">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2 px-6 mt-1 divide-y divide-slate-700">
+          <div className="flex items-center justify-between mb-1">
             Dark Mode <SwitchTheme />
           </div>
 
-          <div className="collapse collapse-arrow">
-            <input type="checkbox" />
-            <div className="collapse-title flex justify-between px-0">Copy Private Key</div>
+          <div className="collapse collapse-arrow pt-[0.4rem] rounded-none">
+            <input type="radio" name="pk-accordion" className="min-h-0 h-10" />
+            <div className="collapse-title flex justify-between py-2 px-0 min-h-0 h-10">Copy Private Key</div>
             <div className="collapse-content text-sm md:text-base px-0">
               <div role="alert" className="alert alert-warning py-2 px-3 gap-2 md:gap-4 grid-flow-col">
                 <ExclamationTriangleIcon className="w-4 h-4 md:w-6 md:h-6" />
@@ -77,7 +77,7 @@ export const SettingsDrawer = () => {
 
           <ImportPrivateKey />
         </div>
-        <DrawerFooter className="pb-6 gap-4">
+        <DrawerFooter className="pb-4 gap-2">
           {nativeCurrencyPrice > 0 && (
             <div>
               <div className="btn btn-primary btn-sm font-normal gap-1 cursor-auto">
@@ -87,7 +87,7 @@ export const SettingsDrawer = () => {
             </div>
           )}
           <div className="flex items-center gap-2">
-            <p className="m-0">
+            <p className="m-0 text-sm">
               Built with <HeartIcon className="inline-block h-4 w-4" /> at
             </p>
             <a
