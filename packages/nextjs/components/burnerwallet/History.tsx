@@ -39,7 +39,7 @@ export const History = ({ chainId, isLoading, history }: HistoryProps) => {
                   {item.value ? (
                     <>
                       {item.type === "sent" ? "-" : "+"}
-                      {item.value} {item.asset}
+                      {item.value.toFixed(4)} {item.asset}
                     </>
                   ) : (
                     "0"
