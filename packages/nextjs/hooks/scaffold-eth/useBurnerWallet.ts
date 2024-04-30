@@ -4,12 +4,12 @@ import { Chain, Hex, HttpTransport, PrivateKeyAccount, createWalletClient, http 
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { WalletClient, usePublicClient } from "wagmi";
 
-const burnerStorageKey = "metaPrivateKey";
+export const burnerStorageKey = "metaPrivateKey";
 
 /**
  * Checks if the private key is valid
  */
-const isValidSk = (pk: Hex | string | undefined | null): boolean => {
+export const isValidSk = (pk: Hex | string | undefined | null): boolean => {
   return pk?.length === 64 || pk?.length === 66;
 };
 
