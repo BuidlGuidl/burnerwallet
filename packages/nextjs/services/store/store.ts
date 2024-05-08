@@ -20,6 +20,10 @@ type GlobalState = {
   setIsQrReaderOpen: (newValue: boolean) => void;
   sendEthToAddress: string;
   setSendEthToAddress: (newValue: string) => void;
+  walletConnectUid: string;
+  setWalletConnectUid: (newValue: string) => void;
+  isWalletConnectOpen: boolean;
+  setIsWalletConnectOpen: (newValue: boolean) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -31,4 +35,8 @@ export const useGlobalState = create<GlobalState>(set => ({
   setIsQrReaderOpen: (newValue: boolean): void => set(() => ({ isQrReaderOpen: newValue })),
   sendEthToAddress: "",
   setSendEthToAddress: (newValue: string): void => set(() => ({ sendEthToAddress: newValue })),
+  walletConnectUid: "",
+  setWalletConnectUid: (newValue: string): void => set(() => ({ walletConnectUid: newValue })),
+  isWalletConnectOpen: false,
+  setIsWalletConnectOpen: (newValue: boolean): void => set(() => ({ isWalletConnectOpen: newValue })),
 }));

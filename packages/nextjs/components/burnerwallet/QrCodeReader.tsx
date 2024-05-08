@@ -10,9 +10,15 @@ const QrCodeReader = () => {
   const isQrReaderOpen = useGlobalState(state => state.isQrReaderOpen);
   const setIsQrReaderOpen = useGlobalState(state => state.setIsQrReaderOpen);
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
+  const setWalletConnectUid = useGlobalState(state => state.setWalletConnectUid);
+  const setIsWalletConnectOpen = useGlobalState(state => state.setIsWalletConnectOpen);
 
   const handleScanRead = (result: string) => {
-    if (isAddress(result)) {
+    if (result.startsWith("wc:")) {
+      setIsQrReaderOpen(false);
+      setWalletConnectUid(result);
+      setIsWalletConnectOpen(true);
+    } else if (isAddress(result)) {
       setToAddress(result);
       setIsQrReaderOpen(false);
       document.getElementById("send-eth-drawer")?.click();

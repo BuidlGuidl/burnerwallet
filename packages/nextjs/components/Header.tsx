@@ -7,6 +7,7 @@ import { NetworksDropdown } from "~~/components/NetworksDropdown";
 import { ReceiveDrawer } from "~~/components/burnerwallet/ReceiveDrawer";
 import { SendDrawer } from "~~/components/burnerwallet/SendDrawer";
 import { SettingsDrawer } from "~~/components/burnerwallet/SettingsDrawer";
+import { WalletConnectDrawer } from "~~/components/burnerwallet/WalletConnectDrawer";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, useAutoConnect } from "~~/hooks/scaffold-eth";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
@@ -58,6 +59,7 @@ export const Header = ({ updateHistory }: { updateHistory: () => void }) => {
         <div className="flex items-center justify-center gap-6 mt-6">
           <ReceiveDrawer address={connectedAddress} />
           <SendDrawer address={connectedAddress} updateHistory={updateHistory} />
+          <WalletConnectDrawer />
         </div>
       </div>
     </div>
