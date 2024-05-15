@@ -5,12 +5,13 @@ import { SessionTypes } from "@walletconnect/types";
 import { parseUri } from "@walletconnect/utils";
 import { buildApprovedNamespaces, getSdkError } from "@walletconnect/utils";
 import { Web3WalletTypes } from "@walletconnect/web3wallet";
+import { useLocalStorage } from "usehooks-ts";
 import { Hex, PrivateKeyAccount, createWalletClient, hexToBigInt, hexToString, http, isAddress } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { useNetwork } from "wagmi";
+import { useNetwork, useSwitchNetwork } from "wagmi";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle } from "~~/components/Drawer";
 import { EIP155_SIGNING_METHODS } from "~~/data/EIP155Data";
-import { burnerStorageKey } from "~~/hooks/scaffold-eth";
+import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, burnerStorageKey } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
 import { errorResponse } from "~~/utils/RpcErrors";
 import { web3wallet } from "~~/utils/WalletConnectUtil";
@@ -29,7 +30,14 @@ export const WalletConnectDrawer = () => {
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<SessionTypes.Struct | null>(null);
 
+  const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
+
   const { chain } = useNetwork();
+  const { chains, switchNetwork } = useSwitchNetwork({
+    onSuccess(data) {
+      setChainId(data.id);
+    },
+  });
 
   async function onConnect(uri: string) {
     const { topic: pairingTopic } = parseUri(uri);
@@ -54,12 +62,14 @@ export const WalletConnectDrawer = () => {
       try {
         const account: PrivateKeyAccount = getAccount();
 
+        const eip155Chains = chains.map(chain => `eip155:${chain.id}`);
+        const accounts = eip155Chains.map(chain => `${chain}:${account.address}`);
+
         const approvedNamespaces = buildApprovedNamespaces({
           proposal: params,
           supportedNamespaces: {
             eip155: {
-              // TODO: Add all supported chains
-              chains: [`eip155:${chain ? chain.id : networks[0].id}`],
+              chains: eip155Chains,
               methods: [
                 EIP155_SIGNING_METHODS.PERSONAL_SIGN,
                 EIP155_SIGNING_METHODS.ETH_SIGN,
@@ -71,8 +81,7 @@ export const WalletConnectDrawer = () => {
               ],
               // TODO: support these events
               events: ["accountsChanged", "chainChanged"],
-              // TODO: Add the address to all supported chains
-              accounts: [`eip155:${chain ? chain.id : networks[0].id}:${account.address}`],
+              accounts: accounts,
             },
           },
         });
@@ -93,13 +102,55 @@ export const WalletConnectDrawer = () => {
 
     async function onSessionRequest(event: Web3WalletTypes.SessionRequest) {
       const { topic, params, id } = event;
-      const { request } = params;
+      const { chainId, request } = params;
       const requestParamsMessage = request.params[0];
 
       const account: PrivateKeyAccount = getAccount();
 
+      if (!chain) {
+        return await web3wallet.respondSessionRequest({
+          topic,
+          response: errorResponse(id, "Invalid chain"),
+        });
+      }
+
+      const chainIdNumber = parseInt(chainId.split(":")[1]);
+      const chainFromRequest = chains.find(c => c.id === chainIdNumber);
+
+      if (!chainFromRequest) {
+        return await web3wallet.respondSessionRequest({
+          topic,
+          response: errorResponse(id, "Invalid chain from request"),
+        });
+      }
+
+      if (chainIdNumber !== chain.id) {
+        if (!switchNetwork) {
+          return await web3wallet.respondSessionRequest({
+            topic,
+            response: errorResponse(id, "Can not switch network"),
+          });
+        }
+
+        try {
+          if (confirm(`Do you want to switch to ${chainFromRequest.name}?`)) {
+            switchNetwork(chainIdNumber);
+          } else {
+            return await web3wallet.respondSessionRequest({
+              topic,
+              response: errorResponse(id, "User rejected network switch"),
+            });
+          }
+        } catch (error: any) {
+          return await web3wallet.respondSessionRequest({
+            topic,
+            response: errorResponse(id, error.message),
+          });
+        }
+      }
+
       const wallet = createWalletClient({
-        chain,
+        chain: chainFromRequest,
         account: account,
         transport: http(),
       });
