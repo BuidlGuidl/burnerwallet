@@ -7,7 +7,6 @@ import { buildApprovedNamespaces, getSdkError } from "@walletconnect/utils";
 import { Web3WalletTypes } from "@walletconnect/web3wallet";
 import { Hex, PrivateKeyAccount, createWalletClient, hexToBigInt, hexToString, http, isAddress } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import * as chains from "viem/chains";
 import { useNetwork } from "wagmi";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle } from "~~/components/Drawer";
 import { EIP155_SIGNING_METHODS } from "~~/data/EIP155Data";
@@ -100,7 +99,7 @@ export const WalletConnectDrawer = () => {
       const account: PrivateKeyAccount = getAccount();
 
       const wallet = createWalletClient({
-        chain: chains.hardhat,
+        chain,
         account: account,
         transport: http(),
       });
