@@ -1,3 +1,4 @@
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { isAddress } from "viem";
 import { useGlobalState } from "~~/services/store/store";
@@ -12,6 +13,8 @@ const QrCodeReader = () => {
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
   const setWalletConnectUid = useGlobalState(state => state.setWalletConnectUid);
   const setIsWalletConnectOpen = useGlobalState(state => state.setIsWalletConnectOpen);
+  const [isManual, setIsManual] = useState(false);
+  const [manualAddress, setManualAddress] = useState("");
 
   const handleScanRead = (result: string) => {
     if (result.startsWith("wc:")) {
@@ -30,22 +33,46 @@ const QrCodeReader = () => {
   return (
     <>
       {isQrReaderOpen && (
-        <div className="max-w-[90%] w-[300px] h-[300px] fixed top-0 left-0 right-0 bottom-0 m-auto z-50">
-          <ReactQrReader
-            // @ts-ignore
-            onScan={(result: string) => {
-              if (!!result) {
-                console.info("Scan result", result);
-                handleScanRead(result);
-              }
-            }}
-            onError={(error: any) => console.log(error)}
-            style={{ width: "100%" }}
-          />
-        </div>
-      )}
-      {isQrReaderOpen && (
-        <div className="fixed inset-0 z-10 bg-white bg-opacity-80" onClick={() => setIsQrReaderOpen(false)} />
+        <>
+          {isManual ? (
+            <div className="max-w-[90%] w-[300px] h-[300px] fixed top-0 left-0 right-0 bottom-0 m-auto z-50 text-center">
+              <input
+                className="input"
+                placeholder="Enter address or WC UID"
+                value={manualAddress}
+                onChange={e => setManualAddress(e.target.value)}
+              />
+              <button className="btn btn-primary mt-2" onClick={() => handleScanRead(manualAddress)}>
+                Submit
+              </button>
+              <div className="text-center mt-8">
+                <button className="btn btn-secondary" onClick={() => setIsManual(false)}>
+                  Scan with camera
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-[90%] w-[300px] h-[300px] fixed top-0 left-0 right-0 bottom-0 m-auto z-50">
+              <ReactQrReader
+                // @ts-ignore
+                onScan={(result: string) => {
+                  if (!!result) {
+                    console.info("Scan result", result);
+                    handleScanRead(result);
+                  }
+                }}
+                onError={(error: any) => console.log(error)}
+                style={{ width: "100%" }}
+              />
+              <div className="text-center mt-8">
+                <button className="btn btn-secondary" onClick={() => setIsManual(true)}>
+                  Enter address or WC UID manually
+                </button>
+              </div>
+            </div>
+          )}
+          <div className="fixed inset-0 z-10 bg-white bg-opacity-80" onClick={() => setIsQrReaderOpen(false)} />
+        </>
       )}
     </>
   );
