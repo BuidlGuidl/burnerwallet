@@ -376,7 +376,7 @@ export const WalletConnectDrawer = () => {
           break;
       }
     }
-  }, [confirmationData.method]);
+  }, [confirmationData]);
 
   return (
     <>
