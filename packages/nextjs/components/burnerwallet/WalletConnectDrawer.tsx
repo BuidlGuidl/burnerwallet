@@ -1,14 +1,13 @@
 "use client";
 
 import React, { ReactNode, useEffect, useState } from "react";
-import { SessionTypes } from "@walletconnect/types";
 import { parseUri } from "@walletconnect/utils";
 import { buildApprovedNamespaces, getSdkError } from "@walletconnect/utils";
 import { Web3WalletTypes } from "@walletconnect/web3wallet";
 import { useLocalStorage } from "usehooks-ts";
 import { Hex, PrivateKeyAccount, createWalletClient, hexToBigInt, hexToString, http, isAddress } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { useNetwork, useSwitchNetwork } from "wagmi";
+import { useSwitchNetwork } from "wagmi";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle } from "~~/components/Drawer";
 import { EIP155_SIGNING_METHODS } from "~~/data/EIP155Data";
 import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, burnerStorageKey } from "~~/hooks/scaffold-eth";
@@ -27,8 +26,10 @@ export const WalletConnectDrawer = () => {
   const isWalletConnectOpen = useGlobalState(state => state.isWalletConnectOpen);
   const setIsWalletConnectOpen = useGlobalState(state => state.setIsWalletConnectOpen);
 
+  const walletConnectSession = useGlobalState(state => state.walletConnectSession);
+  const setWalletConnectSession = useGlobalState(state => state.setWalletConnectSession);
+
   const [loading, setLoading] = useState(false);
-  const [session, setSession] = useState<SessionTypes.Struct | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmationData, setConfirmationData] = useState<any>({});
   const [confirmationTitle, setConfirmationTitle] = useState("");
@@ -36,7 +37,6 @@ export const WalletConnectDrawer = () => {
 
   const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
 
-  const { chain } = useNetwork();
   const { chains, switchNetwork } = useSwitchNetwork({
     onSuccess(data) {
       setChainId(data.id);
@@ -94,7 +94,8 @@ export const WalletConnectDrawer = () => {
           id,
           namespaces: approvedNamespaces,
         });
-        setSession(newSession);
+        setWalletConnectSession(newSession);
+        setWalletConnectUid("");
       } catch (error) {
         notification.error((error as Error).message);
         await web3wallet.rejectSession({
@@ -109,7 +110,9 @@ export const WalletConnectDrawer = () => {
       const { chainId, request } = params;
       const requestParamsMessage = request.params[0];
 
-      if (!chain) {
+      const currentChainId = window?.localStorage?.getItem?.(SCAFFOLD_CHAIN_ID_STORAGE_KEY);
+
+      if (!chainId || !currentChainId) {
         return await web3wallet.respondSessionRequest({
           topic,
           response: errorResponse(id, "Invalid chain"),
@@ -126,7 +129,7 @@ export const WalletConnectDrawer = () => {
         });
       }
 
-      if (chainIdNumber !== chain.id) {
+      if (chainIdNumber !== parseInt(currentChainId)) {
         if (!switchNetwork) {
           return await web3wallet.respondSessionRequest({
             topic,
@@ -218,11 +221,9 @@ export const WalletConnectDrawer = () => {
       web3wallet.on("session_proposal", onSessionProposal);
       web3wallet.on("session_request", onSessionRequest);
 
-      web3wallet.on("session_delete", data => {
+      web3wallet.on("session_delete", async data => {
         console.log("session_delete event received", data);
-        if (session) {
-          web3wallet.disconnectSession({ topic: session.topic, reason: getSdkError("USER_DISCONNECTED") });
-        }
+        await disconnect();
       });
 
       await web3wallet.pair({ uri });
@@ -237,13 +238,17 @@ export const WalletConnectDrawer = () => {
   }
 
   async function disconnect() {
-    if (session) {
-      await web3wallet.disconnectSession({ topic: session.topic, reason: getSdkError("USER_DISCONNECTED") });
-      setSession(null);
-      setWalletConnectUid("");
+    setLoading(true);
+    if (walletConnectSession) {
+      await web3wallet.disconnectSession({
+        topic: walletConnectSession.topic,
+        reason: getSdkError("USER_DISCONNECTED"),
+      });
+      setWalletConnectSession(null);
       notification.success("Disconnected from WalletConnect");
       setIsWalletConnectOpen(false);
     }
+    setLoading(false);
   }
 
   async function onConfirmTransaction() {
@@ -388,13 +393,26 @@ export const WalletConnectDrawer = () => {
           </DrawerHeader>
           <div>
             <div className="max-w-lg mx-auto mb-8 text-center">
-              {session ? (
-                <div>
-                  <div>Connected to Dapp</div>
-                  <button className="btn btn-neutral bg-white/50" onClick={disconnect}>
-                    Disconnect
+              {walletConnectSession ? (
+                walletConnectUid ? (
+                  <button
+                    disabled={!walletConnectUid || loading}
+                    className="btn btn-neutral bg-white/50"
+                    onClick={async () => {
+                      await disconnect();
+                      await onConnect(walletConnectUid);
+                    }}
+                  >
+                    {loading ? "Loading..." : "Disconnect and Connect to new Dapp"}
                   </button>
-                </div>
+                ) : (
+                  <div>
+                    <div>Connected to Dapp</div>
+                    <button className="btn btn-neutral bg-white/50" disabled={loading} onClick={disconnect}>
+                      Disconnect
+                    </button>
+                  </div>
+                )
               ) : (
                 <button
                   disabled={!walletConnectUid || loading}
