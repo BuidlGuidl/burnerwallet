@@ -223,7 +223,8 @@ export const WalletConnectDrawer = () => {
 
       web3wallet.on("session_delete", async data => {
         console.log("session_delete event received", data);
-        await disconnect();
+        setWalletConnectSession(null);
+        notification.success("Disconnected from WalletConnect");
       });
 
       await web3wallet.pair({ uri });

@@ -21,9 +21,11 @@ const QrCodeReader = () => {
       setIsQrReaderOpen(false);
       setWalletConnectUid(result);
       setIsWalletConnectOpen(true);
+      setManualAddress("");
     } else if (isAddress(result)) {
       setToAddress(result);
       setIsQrReaderOpen(false);
+      setManualAddress("");
       document.getElementById("send-eth-drawer")?.click();
     } else {
       notification.error("Invalid address");
