@@ -29,6 +29,8 @@ export const WalletConnectDrawer = () => {
   const walletConnectSession = useGlobalState(state => state.walletConnectSession);
   const setWalletConnectSession = useGlobalState(state => state.setWalletConnectSession);
 
+  const [initialized, setInitialized] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmationData, setConfirmationData] = useState<any>({});
@@ -216,16 +218,23 @@ export const WalletConnectDrawer = () => {
 
     try {
       setLoading(true);
+
       web3wallet.core.pairing.events.on("pairing_expire", pairingExpiredListener);
-
-      web3wallet.on("session_proposal", onSessionProposal);
-      web3wallet.on("session_request", onSessionRequest);
-
-      web3wallet.on("session_delete", async data => {
-        console.log("session_delete event received", data);
-        setWalletConnectSession(null);
-        notification.success("Disconnected from WalletConnect");
+      web3wallet.once("session_proposal", () => {
+        web3wallet.core.pairing.events.removeListener("pairing_expire", pairingExpiredListener);
       });
+
+      if (!initialized) {
+        web3wallet.on("session_proposal", onSessionProposal);
+        web3wallet.on("session_request", onSessionRequest);
+
+        web3wallet.on("session_delete", async data => {
+          console.log("session_delete event received", data);
+          setWalletConnectSession(null);
+          notification.success("Disconnected from WalletConnect");
+        });
+        setInitialized(true);
+      }
 
       await web3wallet.pair({ uri });
 
