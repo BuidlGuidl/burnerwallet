@@ -50,9 +50,9 @@ export const Header = ({ updateHistory }: { updateHistory: () => void }) => {
           />
         </div>
         <div className="text-white">
-          <Address address={connectedAddress} disableAddressLink size="xl" format="short" />
-          <div className="mt-4 flex justify-center">
-            <Balance className="text-2xl" address={connectedAddress} />
+          <Address address={connectedAddress} disableAddressLink size="base" format="short" />
+          <div className="mt-6 mb-8 flex justify-center">
+            <Balance className="text-5xl" address={connectedAddress} usdMode={true} />
           </div>
         </div>
         <div className="flex items-center justify-center gap-6 mt-6">

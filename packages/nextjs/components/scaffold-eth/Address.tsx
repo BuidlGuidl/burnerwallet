@@ -54,8 +54,8 @@ export const Address = ({ address, disableAddressLink, isSimpleView, format, siz
   // Skeleton UI
   if (!checkSumAddress) {
     return (
-      <div className="animate-pulse flex flex-col items-center justify-center gap-4">
-        {!isSimpleView && <div className="rounded-full bg-slate-300 h-16 w-16"></div>}
+      <div className="animate-pulse flex flex-col items-center justify-center gap-2">
+        {!isSimpleView && <div className="rounded-full bg-slate-300 h-10 w-10"></div>}
         <div className="flex items-center space-y-6">
           <div className="h-6 w-48 bg-slate-300 rounded"></div>
         </div>
@@ -77,12 +77,12 @@ export const Address = ({ address, disableAddressLink, isSimpleView, format, siz
   }
 
   const containerClass = isSimpleView ? "" : "flex flex-col items-center";
-  const addressContainerClass = isSimpleView ? "flex items-center" : "flex items-center mt-4";
-  const addressClass = isSimpleView ? `text-${size}` : `ml-1.5 text-${size} font-normal`;
+  const addressContainerClass = isSimpleView ? "flex items-center" : "flex items-center mt-1";
+  const addressClass = isSimpleView ? `text-${size}` : `text-${size} font-normal`;
 
   return (
     <div className={containerClass}>
-      {!isSimpleView && <BlockieAvatar address={checkSumAddress} ensImage={ensAvatar} size={60} />}
+      {!isSimpleView && <BlockieAvatar address={checkSumAddress} ensImage={ensAvatar} size={40} />}
       <div className={addressContainerClass}>
         {disableAddressLink ? (
           <span className={addressClass}>{displayAddress}</span>
@@ -97,7 +97,7 @@ export const Address = ({ address, disableAddressLink, isSimpleView, format, siz
         )}
 
         {addressCopied ? (
-          <CheckCircleIcon className="ml-1.5 text-xl font-normal h-6 w-6 cursor-pointer" aria-hidden="true" />
+          <CheckCircleIcon className="ml-1.5 text-xl font-normal h-4 w-4 cursor-pointer" aria-hidden="true" />
         ) : (
           <CopyToClipboard
             text={checkSumAddress}
@@ -108,7 +108,7 @@ export const Address = ({ address, disableAddressLink, isSimpleView, format, siz
               }, 800);
             }}
           >
-            <DocumentDuplicateIcon className="ml-2 h-6 w-6 cursor-pointer" aria-hidden="true" />
+            <DocumentDuplicateIcon className="ml-2 h-4 w-4 cursor-pointer" aria-hidden="true" />
           </CopyToClipboard>
         )}
 
@@ -118,7 +118,7 @@ export const Address = ({ address, disableAddressLink, isSimpleView, format, siz
           href={blockExplorerAddressLink}
           rel="noopener noreferrer"
         >
-          <ArrowTopRightOnSquareIcon className="h-6 w-6 cursor-pointer" aria-hidden="true" />
+          <ArrowTopRightOnSquareIcon className="h-4 w-4 cursor-pointer" aria-hidden="true" />
         </a>
       </div>
     </div>
