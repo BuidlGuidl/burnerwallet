@@ -136,8 +136,12 @@ export const EtherInput = ({
           </div>
         }
       />
-      <p className="mt-2 mb-0 ml-5 text-left text-sm opacity-50">
-        <span className="font-mono">{internalUsdMode ? "Ξ" : "$"}</span> {oppositeDisplayValue}
+      <p className="mt-2 mb-0 ml-5 text-left text-sm opacity-50 h-5">
+        {value && (
+          <span>
+            <span className="font-mono">{internalUsdMode ? "Ξ" : "$"}</span> {oppositeDisplayValue}
+          </span>
+        )}
       </p>
     </div>
   );
