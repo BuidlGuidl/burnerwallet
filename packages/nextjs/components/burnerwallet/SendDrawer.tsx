@@ -110,12 +110,12 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
                 placeholder="Enter recipient ENS or 0xAddress"
                 onChange={value => setToAddress(value)}
               />
-              <EtherInput value={amount} placeholder="0.00 ETH" onChange={value => setAmount(value.toString())} />
+              <EtherInput value={amount} placeholder="0.00" onChange={value => setAmount(value.toString())} usdMode />
             </div>
             <div className="flex flex-col gap-8 mt-2 px-6 pb-12">
               <div className="flex items-center justify-center m-0 text-lg">
                 Balance:
-                <Balance address={address} className="text-lg" />
+                <Balance address={address} className="text-lg" usdMode />
               </div>
               {!error && (
                 <button
