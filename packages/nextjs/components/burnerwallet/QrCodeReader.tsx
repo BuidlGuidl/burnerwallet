@@ -9,13 +9,14 @@ const ReactQrReader = dynamic(() => import("react-qr-reader"), { ssr: false });
 const QrCodeReader = () => {
   const isQrReaderOpen = useGlobalState(state => state.isQrReaderOpen);
   const setIsQrReaderOpen = useGlobalState(state => state.setIsQrReaderOpen);
+  const setIsSendDrawerOpen = useGlobalState(state => state.setIsSendDrawerOpen);
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
 
   const handleScanRead = (result: string) => {
     if (isAddress(result)) {
       setToAddress(result);
       setIsQrReaderOpen(false);
-      document.getElementById("send-eth-drawer")?.click();
+      setIsSendDrawerOpen(true);
     } else {
       notification.error("Invalid address");
     }
