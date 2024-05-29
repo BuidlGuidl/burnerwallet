@@ -4,6 +4,8 @@ import { useDebounce } from "usehooks-ts";
 import { Address, isAddress } from "viem";
 import { useEnsAddress, useEnsAvatar, useEnsName } from "wagmi";
 import { CommonInputProps, InputBase, isENS } from "~~/components/scaffold-eth";
+import ScanIcon from "~~/icons/ScanIcon";
+import { useGlobalState } from "~~/services/store/store";
 
 /**
  * Address input with ENS name resolution
@@ -17,6 +19,8 @@ export const AddressInput = ({ value, name, placeholder, onChange, disabled }: C
 
   // If the user changes the input after an ENS name is already resolved, we want to remove the stale result
   const settledValue = isDebouncedValueLive ? debouncedValue : undefined;
+
+  const setIsQrReaderOpen = useGlobalState(state => state.setIsQrReaderOpen);
 
   const { data: ensAddress, isLoading: isEnsAddressLoading } = useEnsAddress({
     name: settledValue,
@@ -70,22 +74,30 @@ export const AddressInput = ({ value, name, placeholder, onChange, disabled }: C
         <img alt={`${ensAddress} avatar`} className={avatarStyles} src={ensAvatar} width={96} height={96} />
       )}
       {!value && !ensAvatar && <div className={`${avatarStyles} w-24 h-24 bg-slate-300`}></div>}
-      <div className="w-full">
-        <InputBase<Address>
-          name={name}
-          placeholder={placeholder}
-          error={ensAddress === null}
-          value={value as Address}
-          onChange={handleChange}
-          disabled={isEnsAddressLoading || isEnsNameLoading || disabled}
-          prefix={
-            ensName && (
-              <div className="flex bg-accent text-accent-content rounded-l-md items-center">
-                <span className="px-2">{enteredEnsName ?? ensName}</span>
-              </div>
-            )
-          }
-        />
+      <div className="flex items-center justify-between gap-4 w-full">
+        <div className="flex-1">
+          <InputBase<Address>
+            name={name}
+            placeholder={placeholder}
+            error={ensAddress === null}
+            value={value as Address}
+            onChange={handleChange}
+            disabled={isEnsAddressLoading || isEnsNameLoading || disabled}
+            prefix={
+              ensName && (
+                <div className="flex bg-accent text-accent-content rounded-l-md items-center">
+                  <span className="px-2">{enteredEnsName ?? ensName}</span>
+                </div>
+              )
+            }
+          />
+        </div>
+        <button
+          className="shrink-0 w-12 h-12 bg-accent text-accent-content rounded-lg"
+          onClick={() => setIsQrReaderOpen(true)}
+        >
+          <ScanIcon width="28" height="28" className="mx-auto" />
+        </button>
       </div>
     </div>
   );

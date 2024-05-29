@@ -24,7 +24,7 @@ const QrCodeReader = () => {
   return (
     <>
       {isQrReaderOpen && (
-        <div className="max-w-[90%] w-[300px] h-[300px] fixed top-0 left-0 right-0 bottom-0 m-auto z-50">
+        <div className="max-w-[90%] w-[300px] h-[300px] fixed top-0 left-0 right-0 bottom-0 m-auto z-[100]">
           <ReactQrReader
             // @ts-ignore
             onScan={(result: string) => {
@@ -34,12 +34,12 @@ const QrCodeReader = () => {
               }
             }}
             onError={(error: any) => console.log(error)}
-            style={{ width: "100%" }}
+            style={{ width: "100%", zIndex: 100 }}
           />
         </div>
       )}
       {isQrReaderOpen && (
-        <div className="fixed inset-0 z-10 bg-white bg-opacity-80" onClick={() => setIsQrReaderOpen(false)} />
+        <div className="fixed inset-0 z-[99] bg-black bg-opacity-80" onClick={() => setIsQrReaderOpen(false)} />
       )}
     </>
   );
