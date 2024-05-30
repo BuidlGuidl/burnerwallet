@@ -18,12 +18,13 @@ type SendDrawerProps = {
 export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
   const toAddress = useGlobalState(state => state.sendEthToAddress);
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
+  const isSendDrawerOpen = useGlobalState(state => state.isSendDrawerOpen);
+  const setIsSendDrawerOpen = useGlobalState(state => state.setIsSendDrawerOpen);
   const isValidAddress = isAddress(toAddress);
   const { chain } = useNetwork();
 
   const [amount, setAmount] = useState<string>("");
   const [sending, setSending] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const { data: ethBalance } = useBalance({
     address,
@@ -65,9 +66,9 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
       setAmount("");
       setToAddress("");
       reset(); // resets the useSendTransaction data
-      setIsOpen(false);
+      setIsSendDrawerOpen(false);
     }
-  }, [isConfirmed, setToAddress, transactionData, reset, updateHistory]);
+  }, [isConfirmed, reset, setIsSendDrawerOpen, setToAddress, transactionData, updateHistory]);
 
   const isInsufficientFunds =
     isIdle && ethBalance && parseFloat(amount) > parseFloat(formatEther(ethBalance.value || 0n));
@@ -93,7 +94,7 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
   }
 
   return (
-    <Drawer open={isOpen} onOpenChange={setIsOpen}>
+    <Drawer open={isSendDrawerOpen} onOpenChange={setIsSendDrawerOpen}>
       <DrawerTrigger id="send-eth-drawer" className="btn btn-neutral bg-white/50">
         <PaperAirplaneIcon className="w-6" /> Send
       </DrawerTrigger>
@@ -110,12 +111,12 @@ export const SendDrawer = ({ address, updateHistory }: SendDrawerProps) => {
                 placeholder="Enter recipient ENS or 0xAddress"
                 onChange={value => setToAddress(value)}
               />
-              <EtherInput value={amount} placeholder="0.00 ETH" onChange={value => setAmount(value.toString())} />
+              <EtherInput value={amount} placeholder="0.00" onChange={value => setAmount(value.toString())} usdMode />
             </div>
             <div className="flex flex-col gap-8 mt-2 px-6 pb-12">
               <div className="flex items-center justify-center m-0 text-lg">
                 Balance:
-                <Balance address={address} className="text-lg" />
+                <Balance address={address} className="text-lg" usdMode />
               </div>
               {!error && (
                 <button

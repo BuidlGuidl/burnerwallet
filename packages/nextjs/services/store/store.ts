@@ -20,6 +20,8 @@ type GlobalState = {
   setIsQrReaderOpen: (newValue: boolean) => void;
   sendEthToAddress: string;
   setSendEthToAddress: (newValue: string) => void;
+  isSendDrawerOpen: boolean;
+  setIsSendDrawerOpen: (newValue: boolean) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -31,4 +33,6 @@ export const useGlobalState = create<GlobalState>(set => ({
   setIsQrReaderOpen: (newValue: boolean): void => set(() => ({ isQrReaderOpen: newValue })),
   sendEthToAddress: "",
   setSendEthToAddress: (newValue: string): void => set(() => ({ sendEthToAddress: newValue })),
+  isSendDrawerOpen: false,
+  setIsSendDrawerOpen: (newValue: boolean): void => set(() => ({ isSendDrawerOpen: newValue })),
 }));

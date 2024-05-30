@@ -14,10 +14,10 @@ type BalanceProps = {
 /**
  * Display (ETH & USD) balance of an ETH address.
  */
-export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
+export const Balance = ({ address, className = "", usdMode = false }: BalanceProps) => {
   const { targetNetwork } = useTargetNetwork();
   const { balance, price, isError, isLoading } = useAccountBalance(address);
-  const [displayUsdMode, setDisplayUsdMode] = useState(price > 0 ? Boolean(usdMode) : false);
+  const [displayUsdMode, setDisplayUsdMode] = useState(Boolean(usdMode));
 
   const toggleBalanceMode = () => {
     if (price > 0) {
