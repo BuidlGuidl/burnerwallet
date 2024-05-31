@@ -1,30 +1,34 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ArrowPathIcon, CloudArrowUpIcon, LockClosedIcon } from "@heroicons/react/20/solid";
+import { DocumentArrowUpIcon, PaintBrushIcon, WindowIcon } from "@heroicons/react/20/solid";
 
 async function setIntroCookie() {
   "use server";
-  cookies().set("hasSeenIntro", "true");
+  cookies().set("hasSeenIntro", "true", {
+    expires: new Date(Date.now() + 60 * 60 * 24 * 365 * 1000),
+    maxAge: 60 * 60 * 24 * 365 * 1000,
+  });
   redirect("/");
 }
 
 const features = [
   {
-    name: "Browser by browser",
-    description: "A Burner Wallet's private key is stored in your browser",
-    icon: CloudArrowUpIcon,
+    name: "Browser Memory",
+    description:
+      "A Burner Wallet's private key is stored in your browser's memory. This means you can easily generate a new wallet just by opening a new incognito window!",
+    icon: WindowIcon,
   },
   {
-    name: "SSL certificates",
+    name: "Export Private Key",
     description:
-      "Pellentesque enim a commodo malesuada turpis eleifend risus. Facilisis donec placerat sapien consequat tempor fermentum nibh.",
-    icon: LockClosedIcon,
+      "From the Settings drawer, you can easily copy your Burner Wallet's private key from the browser. To avoid losing your assets, be sure to backup your private key to a secure location.",
+    icon: DocumentArrowUpIcon,
   },
   {
-    name: "Simple queues",
+    name: "New Wallet, New Colors",
     description:
-      "Pellentesque sit elit congue ante nec amet. Dolor aenean curabitur viverra suspendisse iaculis eget. Nec mollis placerat ultricies euismod ut condimentum.",
-    icon: ArrowPathIcon,
+      "Every time you generate a new Burner Wallet, the gradient colors will change. The colors are generated from the private key, so they're unique to each Burner Wallet.",
+    icon: PaintBrushIcon,
   },
 ];
 
@@ -143,6 +147,13 @@ export default function IntroPage() {
                 </div>
               ))}
             </dl>
+          </div>
+          <div className="mt-8 text-center">
+            <form action={setIntroCookie}>
+              <button className="btn btn-primary btn-lg" type="submit">
+                Generate Burner Wallet
+              </button>
+            </form>
           </div>
         </div>
       </div>
