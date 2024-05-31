@@ -29,6 +29,8 @@ export const WalletConnectDrawer = () => {
   const walletConnectSession = useGlobalState(state => state.walletConnectSession);
   const setWalletConnectSession = useGlobalState(state => state.setWalletConnectSession);
 
+  const isWalletConnectInitialized = useGlobalState(state => state.isWalletConnectInitialized);
+
   const [initialized, setInitialized] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -72,6 +74,7 @@ export const WalletConnectDrawer = () => {
         const accounts = eip155Chains.map(chain => `${chain}:${account.address}`);
 
         const approvedNamespaces = buildApprovedNamespaces({
+          // @ts-ignore: TODO: fix types after update WalletConnect to 1.12.1
           proposal: params,
           supportedNamespaces: {
             eip155: {
@@ -423,7 +426,7 @@ export const WalletConnectDrawer = () => {
                     </button>
                   </div>
                 )
-              ) : (
+              ) : isWalletConnectInitialized ? (
                 <button
                   disabled={!walletConnectUid || loading}
                   className="btn btn-neutral bg-white/50"
@@ -431,6 +434,8 @@ export const WalletConnectDrawer = () => {
                 >
                   {loading ? "Loading..." : "Connect to Dapp"}
                 </button>
+              ) : (
+                <div>Loading WalletConnect...</div>
               )}
             </div>
           </div>

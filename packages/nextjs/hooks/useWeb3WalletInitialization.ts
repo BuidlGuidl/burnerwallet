@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useGlobalState } from "~~/services/store/store";
 import { createWeb3Wallet } from "~~/utils/WalletConnectUtil";
 
 export default function useWeb3WalletInitialization() {
-  const [initialized, setInitialized] = useState(false);
+  const isWalletConnectInitialized = useGlobalState(state => state.isWalletConnectInitialized);
+  const setIsWalletConnectInitialized = useGlobalState(state => state.setIsWalletConnectInitialized);
 
   const onInitialize = async () => {
     try {
-      setInitialized(true);
       await createWeb3Wallet("");
+      setIsWalletConnectInitialized(true);
     } catch (err: unknown) {
       console.error("Web3 wallet initialization failed", err);
       alert(err);
@@ -15,10 +17,10 @@ export default function useWeb3WalletInitialization() {
   };
 
   useEffect(() => {
-    if (!initialized) {
+    if (!isWalletConnectInitialized) {
       onInitialize();
     }
-  }, [initialized]);
+  }, [isWalletConnectInitialized]);
 
-  return initialized;
+  return isWalletConnectInitialized;
 }

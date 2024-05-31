@@ -23,6 +23,8 @@ type GlobalState = {
   setSendEthToAddress: (newValue: string) => void;
   walletConnectUid: string;
   setWalletConnectUid: (newValue: string) => void;
+  isWalletConnectInitialized: boolean;
+  setIsWalletConnectInitialized: (newValue: boolean) => void;
   isWalletConnectOpen: boolean;
   setIsWalletConnectOpen: (newValue: boolean) => void;
   walletConnectSession: SessionTypes.Struct | null;
@@ -40,6 +42,8 @@ export const useGlobalState = create<GlobalState>(set => ({
   setSendEthToAddress: (newValue: string): void => set(() => ({ sendEthToAddress: newValue })),
   walletConnectUid: "",
   setWalletConnectUid: (newValue: string): void => set(() => ({ walletConnectUid: newValue })),
+  isWalletConnectInitialized: false,
+  setIsWalletConnectInitialized: (newValue: boolean): void => set(() => ({ isWalletConnectInitialized: newValue })),
   isWalletConnectOpen: false,
   setIsWalletConnectOpen: (newValue: boolean): void => set(() => ({ isWalletConnectOpen: newValue })),
   walletConnectSession: null,
