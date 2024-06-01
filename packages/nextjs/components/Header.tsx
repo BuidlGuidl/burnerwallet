@@ -9,6 +9,7 @@ import { SendDrawer } from "~~/components/burnerwallet/SendDrawer";
 import { SettingsDrawer } from "~~/components/burnerwallet/SettingsDrawer";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, useAutoConnect } from "~~/hooks/scaffold-eth";
+import { cn } from "~~/utils/cn";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
 
 const networks = getTargetNetworks();
@@ -16,7 +17,7 @@ const networks = getTargetNetworks();
 /**
  * Site header
  */
-export const Header = ({ updateHistory }: { updateHistory: () => void }) => {
+export const Header = ({ showIntro, updateHistory }: { showIntro: boolean; updateHistory: () => void }) => {
   useAutoConnect();
 
   const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
@@ -29,7 +30,7 @@ export const Header = ({ updateHistory }: { updateHistory: () => void }) => {
   const { chain } = useNetwork();
 
   return (
-    <div className="relative overflow-hidden">
+    <div className={cn("relative overflow-hidden", showIntro ? "saturate-0" : "")}>
       {connectedAddress && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Jazzicon
@@ -50,7 +51,7 @@ export const Header = ({ updateHistory }: { updateHistory: () => void }) => {
           />
         </div>
         <div className="text-white">
-          <Address address={connectedAddress} disableAddressLink size="base" format="short" />
+          {!showIntro && <Address address={connectedAddress} disableAddressLink size="base" format="short" />}
           <div className="mt-8 mb-10 flex justify-center">
             <Balance className="text-6xl" address={connectedAddress} usdMode />
           </div>

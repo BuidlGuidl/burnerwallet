@@ -34,17 +34,16 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
   const { address: connectedAddress = "" } = useAccount();
   const { chainId, isLoading, history, updateHistory } = useGetHistory({ address: connectedAddress });
 
-  // Only show the modal if user has NOT seen the intro
-  const [showModal, setShowModal] = useState(!hasSeenIntro);
+  const [showIntro, setShowIntro] = useState(!hasSeenIntro);
 
   const onGenerateWallet = useCallback(() => {
     setIntroCookie();
-    setShowModal(false);
+    setShowIntro(false);
   }, []);
 
   return (
     <BurnerWalletWrapper>
-      <Header updateHistory={updateHistory} />
+      <Header showIntro={showIntro} updateHistory={updateHistory} />
       <main>
         <div className="max-w-xl mx-auto">
           <section className="px-6 pb-28 pt-2 divide-y">
@@ -52,7 +51,7 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
           </section>
         </div>
       </main>
-      {showModal && (
+      {showIntro && (
         <div>
           <input type="checkbox" id="my_modal_6" className="modal-toggle" checked />
           <div className="modal" role="dialog">
