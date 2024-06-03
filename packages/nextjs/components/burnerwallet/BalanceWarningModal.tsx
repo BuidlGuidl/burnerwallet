@@ -75,7 +75,7 @@ export const BalanceWarningModal = () => {
           <div className="mt-6 grid md:grid-cols-2 gap-4">
             <CopyPrivateKey size="md" />
             <button className="btn btn-primary h-auto" onClick={onCloseWarningModal}>
-              Close Modal
+              Close Warning
             </button>
           </div>
         </div>
