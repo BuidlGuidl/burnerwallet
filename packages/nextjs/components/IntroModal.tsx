@@ -1,41 +1,30 @@
-import { DocumentArrowUpIcon, PaintBrushIcon, WindowIcon } from "@heroicons/react/20/solid";
+import { DocumentArrowUpIcon, WindowIcon } from "@heroicons/react/20/solid";
 
 const features = [
   {
     name: "Browser Memory",
     description:
-      "A Burner Wallet's private key is stored in your browser's memory. This means you can easily generate a new wallet just by opening a new incognito window!",
+      "A Burner Wallet's private key is stored in your browser's memory. You can easily generate a new wallet just by opening a new incognito window!",
     icon: WindowIcon,
   },
   {
     name: "Export Private Key",
     description:
-      "From the Settings drawer, you can easily copy your Burner Wallet's private key from the browser. To avoid losing your assets, be sure to backup your private key to a secure location.",
+      "From the Settings drawer, you can easily copy your Burner Wallet's private key. Be sure to backup your private key to a secure location.",
     icon: DocumentArrowUpIcon,
-  },
-  {
-    name: "New Wallet, New Colors",
-    description:
-      "Every time you generate a new Burner Wallet, the gradient colors will change. The colors are generated from the private key, so they're unique to each Burner Wallet.",
-    icon: PaintBrushIcon,
   },
 ];
 
 export const IntroModal = ({ onGenerateWallet }: { onGenerateWallet: () => void }) => {
   return (
     <div>
-      <input type="checkbox" id="my_modal_6" className="modal-toggle" checked />
+      <input type="checkbox" id="intro_modal" className="modal-toggle" checked readOnly />
       <div className="modal" role="dialog">
         <div className="modal-box">
           <h1 className="font-bold text-2xl">Burner Wallet</h1>
           <p className="mt-6">
             A <strong>temporary</strong> crypto wallet to quickly send or receive assets on Ethereum and popular Layer 2
             chains.
-          </p>
-
-          <p className="mt-6">
-            With Burner Wallet, a private key is generated and stored in your browser. Be sure to securely backup your
-            private key if you receive real funds or assets!
           </p>
 
           <ul>
