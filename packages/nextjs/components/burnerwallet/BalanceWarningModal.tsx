@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { CopyPrivateKey } from "./CopyPrivateKey";
 import { useLocalStorage } from "usehooks-ts";
 import { useAccount } from "wagmi";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
@@ -53,26 +54,28 @@ export const BalanceWarningModal = () => {
       />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          <div role="alert" className="alert alert-warning">
+          <div role="alert" className="alert alert-warning mb-1">
             <ExclamationTriangleIcon className="w-6 h-6" />
             <span>
-              Warning: Your Burner Wallet Has Funds! Be sure to back-up your private key to avoid loss of funds.
+              Warning: Your Burner Wallet Has Funds! Be sure to back-up your private key to avoid accidentally losing
+              your funds.
             </span>
           </div>
-          <div className="mt-6 flex justify-between">
-            <div>
-              <label className="label cursor-pointer justify-start gap-3">
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={isHideWarningChecked}
-                  onChange={onToggleHideWarning}
-                />
-                <span className="label-text">Don&apos;t Show Again</span>
-              </label>
-            </div>
-            <button className="btn btn-primary" onClick={onCloseWarningModal}>
-              I Understand
+          <div>
+            <label className="label cursor-pointer justify-start gap-3">
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={isHideWarningChecked}
+                onChange={onToggleHideWarning}
+              />
+              <span className="label-text">Don&apos;t Show Again</span>
+            </label>
+          </div>
+          <div className="mt-6 grid md:grid-cols-2 gap-4">
+            <CopyPrivateKey size="md" />
+            <button className="btn btn-primary h-auto" onClick={onCloseWarningModal}>
+              Close Modal
             </button>
           </div>
         </div>

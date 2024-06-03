@@ -1,5 +1,6 @@
 "use client";
 
+import { CopyPrivateKey } from "./CopyPrivateKey";
 import {
   ChevronLeftIcon,
   Cog6ToothIcon,
@@ -19,22 +20,10 @@ import {
 import { SwitchTheme } from "~~/components/SwitchTheme";
 import { BuidlGuidlLogo } from "~~/components/assets/BuidlGuidlLogo";
 import { ImportPrivateKey } from "~~/components/burnerwallet/ImportPrivateKey";
-import { loadBurnerSK } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
-import { notification } from "~~/utils/scaffold-eth";
 
 export const SettingsDrawer = () => {
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrencyPrice);
-
-  const handlePrivateKeyCopy = () => {
-    if (window.confirm("Are you sure you want to copy your private key to the clipboard?") === false) return;
-
-    const sk = loadBurnerSK();
-    if (sk) {
-      navigator.clipboard.writeText(sk);
-      notification.success("Private key copied to clipboard");
-    }
-  };
 
   return (
     <Drawer direction="left">
@@ -69,9 +58,7 @@ export const SettingsDrawer = () => {
                 Be sure to securely import your Private Key into a more secure wallet if you have a substantial amount
                 of assets.
               </p>
-              <button className="btn btn-sm h-auto py-2 btn-outline btn-error" onClick={handlePrivateKeyCopy}>
-                Copy Private Key To Clipboard
-              </button>
+              <CopyPrivateKey />
             </div>
           </div>
 
