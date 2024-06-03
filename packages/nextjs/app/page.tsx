@@ -3,6 +3,7 @@
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { Header } from "~~/components/Header";
+import { BalanceWarningModal } from "~~/components/burnerwallet/BalanceWarningModal";
 import { History } from "~~/components/burnerwallet/History";
 import { useGetHistory } from "~~/hooks/useGetHistory";
 
@@ -20,6 +21,7 @@ const Home: NextPage = () => {
           </section>
         </div>
       </main>
+      <BalanceWarningModal />
     </>
   );
 };
