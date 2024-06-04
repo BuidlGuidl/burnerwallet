@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useAccountBalance } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
@@ -14,10 +14,14 @@ type BalanceProps = {
 /**
  * Display (ETH & USD) balance of an ETH address.
  */
-export const Balance = ({ address, className = "", usdMode }: BalanceProps) => {
+export const Balance = ({ address, className = "", usdMode = false }: BalanceProps) => {
   const { targetNetwork } = useTargetNetwork();
   const { balance, price, isError, isLoading } = useAccountBalance(address);
   const [displayUsdMode, setDisplayUsdMode] = useState(price > 0 ? Boolean(usdMode) : false);
+
+  useEffect(() => {
+    setDisplayUsdMode(price > 0 ? Boolean(usdMode) : false);
+  }, [usdMode, price]);
 
   const toggleBalanceMode = () => {
     if (price > 0) {
