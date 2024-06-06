@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 import { setIntroCookie } from "~~/app/actions";
 import { BurnerWalletWrapper } from "~~/components/BurnerWalletWrapper";
 import { Header } from "~~/components/Header";
+import { BalanceWarningModal } from "~~/components/burnerwallet/BalanceWarningModal";
 import { History } from "~~/components/burnerwallet/History";
 import { useGetHistory } from "~~/hooks/useGetHistory";
 
@@ -31,6 +32,7 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
         </div>
       </main>
       {showIntro && <IntroModal onGenerateWallet={onGenerateWallet} />}
+      <BalanceWarningModal />
     </BurnerWalletWrapper>
   );
 };
