@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { cn } from "~~/utils/cn";
 
 const ADDRESSES = [
   "0x815E0023A28AA56ae60148B3781D783b223953B6",
@@ -10,26 +11,28 @@ const ADDRESSES = [
   "0x9E9be8440794f28Ac08e13ec290B688520a5D824",
 ];
 
-export const RandomLoadingBackground = () => {
+export const RandomLoadingBackground = ({ isLoading = false }: { isLoading: boolean }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (count === 3) {
-        setCount(0);
-        return;
-      }
+      if (isLoading) {
+        if (count === 3) {
+          setCount(0);
+          return;
+        }
 
-      setCount(count + 1);
+        setCount(count + 1);
+      }
     }, 500);
 
     return () => clearInterval(interval);
-  }, [count]);
+  }, [count, isLoading]);
 
   const address = ADDRESSES[count];
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center saturate-50">
+    <div className={cn("absolute inset-0 flex items-center justify-center", isLoading ? "saturate-50" : "saturate-0")}>
       <Jazzicon
         diameter={600}
         paperStyles={{

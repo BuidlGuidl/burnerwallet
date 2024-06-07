@@ -29,7 +29,7 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
 
   return (
     <BurnerWalletWrapper>
-      <Header showIntro={showIntro} updateHistory={updateHistory} />
+      <Header isGenerateWalletLoading={isGenerateWalletLoading} showIntro={showIntro} updateHistory={updateHistory} />
       <main>
         <div className="max-w-xl mx-auto">
           <section className="px-6 pb-28 pt-2 divide-y">
