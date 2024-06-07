@@ -1,5 +1,6 @@
 "use client";
 
+import { RandomLoadingBackground } from "./RandomLoadingBackground";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { useLocalStorage } from "usehooks-ts";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
@@ -35,7 +36,7 @@ export const Header = ({ showIntro, updateHistory }: { showIntro: boolean; updat
   const { chain } = useNetwork();
 
   return (
-    <div className={cn("relative overflow-hidden", showIntro ? "saturate-0" : "")}>
+    <div className={cn("relative overflow-hidden")}>
       {connectedAddress && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Jazzicon
@@ -47,6 +48,7 @@ export const Header = ({ showIntro, updateHistory }: { showIntro: boolean; updat
           />
         </div>
       )}
+      {showIntro && <RandomLoadingBackground />}
       <div className="relative z-10 p-6 glass">
         <div className="flex justify-between items-center mb-6">
           <SettingsDrawer />

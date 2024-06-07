@@ -15,10 +15,16 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
   const { chainId, isLoading, history, updateHistory } = useGetHistory({ address: connectedAddress });
 
   const [showIntro, setShowIntro] = useState(!hasSeenIntro);
+  const [isGenerateWalletLoading, setIsGenerateWalletLoading] = useState(false);
 
   const onGenerateWallet = useCallback(() => {
-    setIntroCookie();
-    setShowIntro(false);
+    setIsGenerateWalletLoading(true);
+
+    setTimeout(() => {
+      setIsGenerateWalletLoading(false);
+      setIntroCookie();
+      setShowIntro(false);
+    }, 2000);
   }, []);
 
   return (
@@ -31,7 +37,7 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
           </section>
         </div>
       </main>
-      {showIntro && <IntroModal onGenerateWallet={onGenerateWallet} />}
+      {showIntro && <IntroModal isLoading={isGenerateWalletLoading} onGenerateWallet={onGenerateWallet} />}
       <BalanceWarningModal />
     </BurnerWalletWrapper>
   );
