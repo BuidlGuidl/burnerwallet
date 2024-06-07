@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { cn } from "~~/utils/cn";
 
+// Addresses to cycle through
 const ADDRESSES = [
   "0x815E0023A28AA56ae60148B3781D783b223953B6",
   "0xa63Bfd6492Ed2098e417fe2A7dE30d39d9CbC102",
@@ -15,6 +16,8 @@ export const RandomLoadingBackground = ({ isLoading = false }: { isLoading: bool
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    // When there is a loading state, cycle through the ADDRESSES above
+    // to mimic a burner wallet being generated.
     const interval = setInterval(() => {
       if (isLoading) {
         if (count === 3) {
@@ -26,6 +29,7 @@ export const RandomLoadingBackground = ({ isLoading = false }: { isLoading: bool
       }
     }, 500);
 
+    // Clear the interval
     return () => clearInterval(interval);
   }, [count, isLoading]);
 

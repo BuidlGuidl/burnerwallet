@@ -18,8 +18,10 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
   const [isGenerateWalletLoading, setIsGenerateWalletLoading] = useState(false);
 
   const onGenerateWallet = useCallback(() => {
+    // Setting a fake loading state to look like a wallet is being generated.
     setIsGenerateWalletLoading(true);
 
+    // Loading state finishes after 2 seconds.
     setTimeout(() => {
       setIsGenerateWalletLoading(false);
       setIntroCookie();
