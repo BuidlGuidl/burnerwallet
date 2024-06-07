@@ -33,6 +33,9 @@ export const WalletConnectDrawer = () => {
 
   const [initialized, setInitialized] = useState(false);
 
+  const [sessionProposalData, setSessionProposalData] = useState<any>();
+  const [isSessionProposalOpen, setIsSessionProposalOpen] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmationData, setConfirmationData] = useState<any>({});
@@ -56,6 +59,58 @@ export const WalletConnectDrawer = () => {
     return account;
   }
 
+  async function onSessionProposalAccept({ id, params }: Web3WalletTypes.SessionProposal) {
+    try {
+      const account: PrivateKeyAccount = getAccount();
+
+      const eip155Chains = chains.map(chain => `eip155:${chain.id}`);
+      const accounts = eip155Chains.map(chain => `${chain}:${account.address}`);
+
+      const approvedNamespaces = buildApprovedNamespaces({
+        // @ts-ignore: TODO: fix types after update WalletConnect to 1.12.1
+        proposal: params,
+        supportedNamespaces: {
+          eip155: {
+            chains: eip155Chains,
+            methods: [
+              EIP155_SIGNING_METHODS.PERSONAL_SIGN,
+              EIP155_SIGNING_METHODS.ETH_SIGN,
+              EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
+              EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3,
+              EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4,
+              EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
+              EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
+            ],
+            // TODO: support these events
+            events: ["accountsChanged", "chainChanged"],
+            accounts: accounts,
+          },
+        },
+      });
+
+      const newSession = await web3wallet.approveSession({
+        id,
+        namespaces: approvedNamespaces,
+      });
+      setWalletConnectSession(newSession);
+      setWalletConnectUid("");
+      notification.success("Connected to WalletConnect");
+    } catch (error) {
+      notification.error((error as Error).message);
+      await web3wallet.rejectSession({
+        id: id,
+        reason: getSdkError("USER_REJECTED"),
+      });
+    }
+  }
+
+  async function onSessionProposalReject({ id }: Web3WalletTypes.SessionProposal) {
+    await web3wallet.rejectSession({
+      id: id,
+      reason: getSdkError("USER_REJECTED"),
+    });
+  }
+
   async function onConnect(uri: string) {
     const { topic: pairingTopic } = parseUri(uri);
 
@@ -67,47 +122,8 @@ export const WalletConnectDrawer = () => {
     };
 
     async function onSessionProposal({ id, params }: Web3WalletTypes.SessionProposal) {
-      try {
-        const account: PrivateKeyAccount = getAccount();
-
-        const eip155Chains = chains.map(chain => `eip155:${chain.id}`);
-        const accounts = eip155Chains.map(chain => `${chain}:${account.address}`);
-
-        const approvedNamespaces = buildApprovedNamespaces({
-          // @ts-ignore: TODO: fix types after update WalletConnect to 1.12.1
-          proposal: params,
-          supportedNamespaces: {
-            eip155: {
-              chains: eip155Chains,
-              methods: [
-                EIP155_SIGNING_METHODS.PERSONAL_SIGN,
-                EIP155_SIGNING_METHODS.ETH_SIGN,
-                EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
-                EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3,
-                EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4,
-                EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
-                EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
-              ],
-              // TODO: support these events
-              events: ["accountsChanged", "chainChanged"],
-              accounts: accounts,
-            },
-          },
-        });
-
-        const newSession = await web3wallet.approveSession({
-          id,
-          namespaces: approvedNamespaces,
-        });
-        setWalletConnectSession(newSession);
-        setWalletConnectUid("");
-      } catch (error) {
-        notification.error((error as Error).message);
-        await web3wallet.rejectSession({
-          id: id,
-          reason: getSdkError("USER_REJECTED"),
-        });
-      }
+      setSessionProposalData({ id, params });
+      setIsSessionProposalOpen(true);
     }
 
     async function onSessionRequest(event: Web3WalletTypes.SessionRequest) {
@@ -240,9 +256,6 @@ export const WalletConnectDrawer = () => {
       }
 
       await web3wallet.pair({ uri });
-
-      notification.success("Connected to WalletConnect");
-      setIsWalletConnectOpen(false);
     } catch (error) {
       notification.error((error as Error).message);
     } finally {
@@ -396,6 +409,24 @@ export const WalletConnectDrawer = () => {
     }
   }, [confirmationData]);
 
+  useEffect(() => {
+    if (walletConnectUid) {
+      if (walletConnectSession) {
+        // if there is a current session, show the option to disconnect and connect to new dapp
+        setIsWalletConnectOpen(true);
+      } else {
+        if (isWalletConnectInitialized) {
+          // if there is no session and WC is initialized, show the confirmation data to connect to dapp
+          onConnect(walletConnectUid);
+        } else {
+          // if there is no session and WC is not initialized, show a loading message
+          setIsSessionProposalOpen(true);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletConnectUid, walletConnectSession, isWalletConnectInitialized]);
+
   return (
     <>
       <Drawer open={isWalletConnectOpen} onOpenChange={setIsWalletConnectOpen}>
@@ -420,7 +451,7 @@ export const WalletConnectDrawer = () => {
                   </button>
                 ) : (
                   <div>
-                    <div>Connected to Dapp</div>
+                    <div>Connected to {walletConnectSession.peer.metadata.name}</div>
                     <button className="btn btn-neutral bg-white/50" disabled={loading} onClick={disconnect}>
                       Disconnect
                     </button>
@@ -439,6 +470,60 @@ export const WalletConnectDrawer = () => {
               )}
             </div>
           </div>
+        </DrawerContent>
+      </Drawer>
+      <Drawer open={isSessionProposalOpen} onOpenChange={setIsSessionProposalOpen}>
+        <DrawerContent>
+          <DrawerLine />
+          <DrawerHeader>
+            <DrawerTitle className="mt-1 text-2xl">WalletConnect</DrawerTitle>
+          </DrawerHeader>
+          {isWalletConnectInitialized ? (
+            <div>
+              <div className="flex flex-col items-center">
+                {sessionProposalData?.params?.proposer?.metadata?.icons[0] && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    alt="Dapp Icon"
+                    src={sessionProposalData.params.proposer.metadata.icons[0]}
+                    width={64}
+                    height={64}
+                    className="mb-4"
+                  />
+                )}
+                <h2 className="text-xl font-bold">{sessionProposalData?.params?.proposer?.metadata?.name}</h2>
+                <p>{sessionProposalData?.params?.proposer?.metadata?.description}</p>
+                <p>{sessionProposalData?.params?.proposer?.metadata?.url}</p>
+                <p className="font-bold">Requested permissions</p>
+                <ul className="list-disc">
+                  <li>View your balance and activity</li>
+                  <li>Send approval requests</li>
+                </ul>
+              </div>
+              <div className="max-w-lg mx-auto m-8 text-center">
+                <button
+                  className="btn btn-secondary mr-8"
+                  onClick={() => {
+                    onSessionProposalReject(sessionProposalData);
+                    setIsSessionProposalOpen(false);
+                  }}
+                >
+                  Reject
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    onSessionProposalAccept(sessionProposalData);
+                    setIsSessionProposalOpen(false);
+                  }}
+                >
+                  Connect
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>Loading WalletConnect...</div>
+          )}
         </DrawerContent>
       </Drawer>
       <dialog id="wallet-connect-confirmation-modal" className="modal overflow-y-auto" open={isModalOpen}>
