@@ -13,7 +13,6 @@ const QrCodeReader = () => {
   const setIsSendDrawerOpen = useGlobalState(state => state.setIsSendDrawerOpen);
   const setToAddress = useGlobalState(state => state.setSendEthToAddress);
   const setWalletConnectUid = useGlobalState(state => state.setWalletConnectUid);
-  const setIsWalletConnectOpen = useGlobalState(state => state.setIsWalletConnectOpen);
   const [isManual, setIsManual] = useState(false);
   const [manualAddress, setManualAddress] = useState("");
 
@@ -21,7 +20,6 @@ const QrCodeReader = () => {
     if (result.startsWith("wc:")) {
       setIsQrReaderOpen(false);
       setWalletConnectUid(result);
-      setIsWalletConnectOpen(true);
       setManualAddress("");
     } else if (isAddress(result)) {
       setToAddress(result);
