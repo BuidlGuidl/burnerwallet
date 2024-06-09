@@ -491,9 +491,9 @@ export const WalletConnectDrawer = () => {
                     className="mb-4"
                   />
                 )}
-                <h2 className="text-xl font-bold">{sessionProposalData?.params?.proposer?.metadata?.name}</h2>
-                <p>{sessionProposalData?.params?.proposer?.metadata?.description}</p>
-                <p>{sessionProposalData?.params?.proposer?.metadata?.url}</p>
+                <h2 className="text-xl font-bold mb-1">{sessionProposalData?.params?.proposer?.metadata?.name}</h2>
+                <p className="mt-1">{sessionProposalData?.params?.proposer?.metadata?.url}</p>
+                <p className="text-lg">Wants to connect to your wallet</p>
                 <p className="font-bold">Requested permissions</p>
                 <ul className="list-disc">
                   <li>View your balance and activity</li>
