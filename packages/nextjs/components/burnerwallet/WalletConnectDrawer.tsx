@@ -480,7 +480,7 @@ export const WalletConnectDrawer = () => {
           </DrawerHeader>
           {isWalletConnectInitialized ? (
             <div>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center px-2">
                 {sessionProposalData?.params?.proposer?.metadata?.icons[0] && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
