@@ -15,15 +15,23 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
   const { chainId, isLoading, history, updateHistory } = useGetHistory({ address: connectedAddress });
 
   const [showIntro, setShowIntro] = useState(!hasSeenIntro);
+  const [isGenerateWalletLoading, setIsGenerateWalletLoading] = useState(false);
 
   const onGenerateWallet = useCallback(() => {
-    setIntroCookie();
-    setShowIntro(false);
+    // Setting a fake loading state to look like a wallet is being generated.
+    setIsGenerateWalletLoading(true);
+
+    // Loading state finishes after 2 seconds.
+    setTimeout(() => {
+      setIsGenerateWalletLoading(false);
+      setIntroCookie();
+      setShowIntro(false);
+    }, 2000);
   }, []);
 
   return (
     <BurnerWalletWrapper>
-      <Header showIntro={showIntro} updateHistory={updateHistory} />
+      <Header isGenerateWalletLoading={isGenerateWalletLoading} showIntro={showIntro} updateHistory={updateHistory} />
       <main>
         <div className="max-w-xl mx-auto">
           <section className="px-6 pb-28 pt-2 divide-y">
@@ -31,7 +39,7 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
           </section>
         </div>
       </main>
-      {showIntro && <IntroModal onGenerateWallet={onGenerateWallet} />}
+      {showIntro && <IntroModal isLoading={isGenerateWalletLoading} onGenerateWallet={onGenerateWallet} />}
       <BalanceWarningModal />
     </BurnerWalletWrapper>
   );
