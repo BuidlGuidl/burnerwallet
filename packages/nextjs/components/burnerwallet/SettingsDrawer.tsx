@@ -66,7 +66,7 @@ export const SettingsDrawer = () => {
 
           <ImportPrivateKey />
           <div className="pt-3">
-            <Link href="/info" className="inline-block leading-none hover:text-primary">
+            <Link href="/info" className="inline-block hover:text-primary">
               <QuestionMarkCircleIcon className="inline-block w-5 h-5 -mt-1" /> About Burner Wallet
             </Link>
           </div>
