@@ -1,5 +1,6 @@
 "use client";
 
+import { RandomLoadingBackground } from "./RandomLoadingBackground";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { useLocalStorage } from "usehooks-ts";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
@@ -12,15 +13,20 @@ import { Address, Balance } from "~~/components/scaffold-eth";
 import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, useAutoConnect } from "~~/hooks/scaffold-eth";
 import WalletConnectIcon from "~~/icons/WalletConnectIcon";
 import { useGlobalState } from "~~/services/store/store";
-import { cn } from "~~/utils/cn";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
 
 const networks = getTargetNetworks();
 
+type HeaderProps = {
+  isGenerateWalletLoading: boolean;
+  showIntro: boolean;
+  updateHistory: () => void;
+};
+
 /**
  * Site header
  */
-export const Header = ({ showIntro, updateHistory }: { showIntro: boolean; updateHistory: () => void }) => {
+export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: HeaderProps) => {
   useAutoConnect();
 
   const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
@@ -35,8 +41,8 @@ export const Header = ({ showIntro, updateHistory }: { showIntro: boolean; updat
   const { chain } = useNetwork();
 
   return (
-    <div className={cn("relative overflow-hidden", showIntro ? "saturate-0" : "")}>
-      {connectedAddress && (
+    <div className={"relative overflow-hidden"}>
+      {connectedAddress && !showIntro && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Jazzicon
             diameter={600}
@@ -47,6 +53,7 @@ export const Header = ({ showIntro, updateHistory }: { showIntro: boolean; updat
           />
         </div>
       )}
+      {showIntro && <RandomLoadingBackground isLoading={isGenerateWalletLoading} />}
       <div className="relative z-10 p-6 glass">
         <div className="flex justify-between items-center mb-6">
           <SettingsDrawer />

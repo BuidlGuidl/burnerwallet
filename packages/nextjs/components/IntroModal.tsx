@@ -15,7 +15,12 @@ const features = [
   },
 ];
 
-export const IntroModal = ({ onGenerateWallet }: { onGenerateWallet: () => void }) => {
+type IntroModalProps = {
+  isLoading: boolean;
+  onGenerateWallet: () => void;
+};
+
+export const IntroModal = ({ isLoading, onGenerateWallet }: IntroModalProps) => {
   return (
     <div>
       <input type="checkbox" id="intro_modal" className="modal-toggle" checked readOnly />
@@ -38,6 +43,7 @@ export const IntroModal = ({ onGenerateWallet }: { onGenerateWallet: () => void 
 
           <div className="text-center mt-6">
             <button className="btn btn-primary" onClick={onGenerateWallet}>
+              {isLoading && <span className="loading loading-spinner"></span>}
               Generate Burner Wallet
             </button>
           </div>
