@@ -7,6 +7,11 @@ import { notification } from "~~/utils/scaffold-eth";
 // @ts-ignore
 const ReactQrReader = dynamic(() => import("react-qr-reader"), { ssr: false });
 
+// Cleans up extra characters from Coinbase Wallet QR Code.
+function cleanAddress(result: string) {
+  return result.replace("ethereum:", "");
+}
+
 const QrCodeReader = () => {
   const isQrReaderOpen = useGlobalState(state => state.isQrReaderOpen);
   const setIsQrReaderOpen = useGlobalState(state => state.setIsQrReaderOpen);
@@ -17,12 +22,14 @@ const QrCodeReader = () => {
   const [manualAddress, setManualAddress] = useState("");
 
   const handleScanRead = (result: string) => {
+    const address = cleanAddress(result);
+
     if (result.startsWith("wc:")) {
       setIsQrReaderOpen(false);
       setWalletConnectUid(result);
       setManualAddress("");
-    } else if (isAddress(result)) {
-      setToAddress(result);
+    } else if (isAddress(address)) {
+      setToAddress(address);
       setIsQrReaderOpen(false);
       setManualAddress("");
       setIsSendDrawerOpen(true);
