@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CopyPrivateKey } from "./CopyPrivateKey";
 import {
   ChevronLeftIcon,
@@ -7,6 +8,7 @@ import {
   CurrencyDollarIcon,
   ExclamationTriangleIcon,
   HeartIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import {
   Drawer,
@@ -63,6 +65,11 @@ export const SettingsDrawer = () => {
           </div>
 
           <ImportPrivateKey />
+          <div className="pt-3">
+            <Link href="/info" className="inline-block hover:text-primary">
+              <QuestionMarkCircleIcon className="inline-block w-5 h-5 -mt-1" /> About Burner Wallet
+            </Link>
+          </div>
         </div>
         <DrawerFooter className="pb-4 gap-2 bg-base-200">
           {nativeCurrencyPrice > 0 && (
