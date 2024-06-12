@@ -89,6 +89,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
   const {
     data: dataFromQuery = { transfers: [] },
     isLoading: isDataFromLoading,
+    isFetched: isDataFromFetched,
     refetch: refetchDataFrom,
   } = useQuery({
     queryKey: ["historyFrom", address, allCategories, chain?.id],
@@ -107,6 +108,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
   const {
     data: dataToQuery = { transfers: [] },
     isLoading: isDataToLoading,
+    isFetched: isDataToFetched,
     refetch: refetchDataTo,
   } = useQuery({
     queryKey: ["historyTo", address, allCategories, chain?.id],
@@ -199,15 +201,10 @@ export const useGetHistory = ({ address }: { address: string }) => {
   }, [refetchDataFrom, refetchDataTo]);
 
   useEffect(() => {
-    if (address && chain) {
+    if (address && chain && isDataFromFetched && isDataToFetched) {
       updateHistory(dataFromQuery, dataToQuery);
     }
-  }, [address, chain, dataFromQuery, dataToQuery, updateHistory]);
-
-  // Trigger a refetch if the chain id changes.
-  useEffect(() => {
-    refetchQuery();
-  }, [chain?.id, refetchQuery]);
+  }, [address, chain, dataFromQuery, dataToQuery, isDataFromFetched, isDataToFetched, updateHistory]);
 
   return {
     chainId: chain?.id || 1,
