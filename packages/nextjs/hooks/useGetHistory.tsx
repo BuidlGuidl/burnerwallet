@@ -33,6 +33,8 @@ export type HistoryItemByDate = {
   items: HistoryItem[];
 };
 
+const REFETCH_INTERVAL = 30000;
+
 export const useGetHistory = ({ address }: { address: string }) => {
   const { chain } = useNetwork();
 
@@ -101,7 +103,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
 
       return data;
     },
-    refetchInterval: 5000,
+    refetchInterval: REFETCH_INTERVAL,
   });
 
   const {
@@ -119,7 +121,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
 
       return data;
     },
-    refetchInterval: 5000,
+    refetchInterval: REFETCH_INTERVAL,
   });
 
   const updateHistory = useCallback(
