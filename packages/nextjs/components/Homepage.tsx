@@ -12,7 +12,7 @@ import { useGetHistory } from "~~/hooks/useGetHistory";
 
 const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
   const { address: connectedAddress = "" } = useAccount();
-  const { chainId, isLoading, history, updateHistory } = useGetHistory({ address: connectedAddress });
+  const { chainId, isLoading, history, refetchQuery } = useGetHistory({ address: connectedAddress });
 
   const [showIntro, setShowIntro] = useState(!hasSeenIntro);
   const [isGenerateWalletLoading, setIsGenerateWalletLoading] = useState(false);
@@ -31,7 +31,7 @@ const Homepage = ({ hasSeenIntro = false }: { hasSeenIntro: boolean }) => {
 
   return (
     <BurnerWalletWrapper>
-      <Header isGenerateWalletLoading={isGenerateWalletLoading} showIntro={showIntro} updateHistory={updateHistory} />
+      <Header isGenerateWalletLoading={isGenerateWalletLoading} showIntro={showIntro} updateHistory={refetchQuery} />
       <main>
         <div className="max-w-xl mx-auto">
           <section className="px-6 pb-28 pt-2 divide-y">
