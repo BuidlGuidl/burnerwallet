@@ -109,7 +109,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
     isLoading: isDataToLoading,
     refetch: refetchDataTo,
   } = useQuery({
-    queryKey: ["historyTo", address, allCategories],
+    queryKey: ["historyTo", address, allCategories, chain?.id],
     queryFn: async () => {
       const data = alchemy.core.getAssetTransfers({
         fromBlock: "0x0",
