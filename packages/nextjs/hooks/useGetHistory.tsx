@@ -91,7 +91,7 @@ export const useGetHistory = ({ address }: { address: string }) => {
     isLoading: isDataFromLoading,
     refetch: refetchDataFrom,
   } = useQuery({
-    queryKey: ["historyFrom", address, allCategories],
+    queryKey: ["historyFrom", address, allCategories, chain?.id],
     queryFn: async () => {
       const data = await alchemy.core.getAssetTransfers({
         fromBlock: "0x0",
@@ -203,6 +203,11 @@ export const useGetHistory = ({ address }: { address: string }) => {
       updateHistory(dataFromQuery, dataToQuery);
     }
   }, [address, chain, dataFromQuery, dataToQuery, updateHistory]);
+
+  // Trigger a refetch if the chain id changes.
+  useEffect(() => {
+    refetchQuery();
+  }, [chain?.id, refetchQuery]);
 
   return {
     chainId: chain?.id || 1,
