@@ -1,6 +1,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { isAddress } from "viem";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useGlobalState } from "~~/services/store/store";
 import { notification } from "~~/utils/scaffold-eth";
 
@@ -61,6 +62,9 @@ const QrCodeReader = () => {
             </div>
           ) : (
             <div className="max-w-[90%] w-[300px] h-[300px] fixed top-0 left-0 right-0 bottom-0 m-auto z-[100]">
+              <button className="block ml-auto mb-1 pointer-events-auto" onClick={() => setIsQrReaderOpen(false)}>
+                <XCircleIcon className="w-6 h-6 text-white" />
+              </button>
               <ReactQrReader
                 // @ts-ignore
                 onScan={(result: string) => {
