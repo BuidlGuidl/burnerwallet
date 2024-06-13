@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Alchemy, AssetTransfersCategory, AssetTransfersResponse, Network } from "alchemy-sdk";
 import { createPublicClient, hexToBigInt, http } from "viem";
 import * as chains from "viem/chains";
@@ -70,7 +71,6 @@ export const useGetHistory = ({ address }: { address: string }) => {
   const alchemy = useMemo(() => new Alchemy(config), [config]);
 
   const [history, setHistory] = useState<HistoryItemByDate[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const publicClient = useMemo(
     () =>
@@ -86,99 +86,130 @@ export const useGetHistory = ({ address }: { address: string }) => {
     [chain],
   );
 
-  const updateHistory = useCallback(async () => {
-    setIsLoading(true);
+  const {
+    data: dataFromQuery = { transfers: [] },
+    isLoading: isDataFromLoading,
+    isFetched: isDataFromFetched,
+    refetch: refetchDataFrom,
+  } = useQuery({
+    queryKey: ["historyFrom", address, allCategories, chain?.id],
+    queryFn: async () => {
+      const data = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        fromAddress: address,
+        category: allCategories,
+      });
 
-    const dataFrom: AssetTransfersResponse = await alchemy.core.getAssetTransfers({
-      fromBlock: "0x0",
-      fromAddress: address,
-      category: allCategories,
-    });
+      return data;
+    },
+    refetchInterval: scaffoldConfig.pollingInterval,
+  });
 
-    const dataTo: AssetTransfersResponse = await alchemy.core.getAssetTransfers({
-      fromBlock: "0x0",
-      toAddress: address,
-      category: allCategories,
-    });
+  const {
+    data: dataToQuery = { transfers: [] },
+    isLoading: isDataToLoading,
+    isFetched: isDataToFetched,
+    refetch: refetchDataTo,
+  } = useQuery({
+    queryKey: ["historyTo", address, allCategories, chain?.id],
+    queryFn: async () => {
+      const data = alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        toAddress: address,
+        category: allCategories,
+      });
 
-    const dataFromBlockNumbers = dataFrom.transfers.map(item => item.blockNum);
-    const dataToBlockNumbers = dataTo.transfers.map(item => item.blockNum);
+      return data;
+    },
+    refetchInterval: scaffoldConfig.pollingInterval,
+  });
 
-    const blockNumbers = dataFromBlockNumbers.concat(dataToBlockNumbers);
-    const blocksData = await Promise.all(
-      blockNumbers.map(blockNumber =>
-        publicClient.getBlock({ blockNumber: hexToBigInt(blockNumber as `0x${string}`) }),
-      ),
-    );
+  const updateHistory = useCallback(
+    async (dataFrom: AssetTransfersResponse, dataTo: AssetTransfersResponse) => {
+      const dataFromBlockNumbers = dataFrom.transfers.map(item => item.blockNum);
+      const dataToBlockNumbers = dataTo.transfers.map(item => item.blockNum);
 
-    const historyFrom = dataFrom.transfers.map(
-      item =>
-        ({
-          address: item.to,
-          value: item.value,
-          asset: item.asset,
-          hash: item.hash,
-          type: "sent",
-          category: item.category,
-          categoryLabel: item.category === AssetTransfersCategory.EXTERNAL ? "Sent" : categoryToLabel[item.category],
-          timestamp:
-            blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
-          icon:
-            item.category === AssetTransfersCategory.INTERNAL ? (
-              <ArrowPathIcon className="w-5" />
-            ) : (
-              <PaperAirplaneIcon className="w-5" />
-            ),
-        } as HistoryItem),
-    );
+      const blockNumbers = dataFromBlockNumbers.concat(dataToBlockNumbers);
+      const blocksData = await Promise.all(
+        blockNumbers.map(blockNumber =>
+          publicClient.getBlock({ blockNumber: hexToBigInt(blockNumber as `0x${string}`) }),
+        ),
+      );
 
-    const historyTo = dataTo.transfers.map(
-      item =>
-        ({
-          address: item.from,
-          value: item.value,
-          asset: item.asset,
-          hash: item.hash,
-          type: "received",
-          category: item.category,
-          categoryLabel:
-            item.category === AssetTransfersCategory.EXTERNAL ? "Received" : categoryToLabel[item.category],
-          timestamp:
-            blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
-          icon:
-            item.category === AssetTransfersCategory.INTERNAL ? (
-              <ArrowPathIcon className="w-5" />
-            ) : (
-              <ArrowDownTrayIcon className="w-5" />
-            ),
-        } as HistoryItem),
-    );
-    const history = historyFrom.concat(historyTo);
-    const sortedHistory = history.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
-    const historyByDate: HistoryItemByDate[] = [];
-    let lastDate = "";
-    sortedHistory.forEach(item => {
-      const date = new Date(Number(item.timestamp * 1000n)).toDateString();
-      if (date !== lastDate) {
-        lastDate = date;
-        historyByDate.push({ date, items: [] });
-      }
-      historyByDate[historyByDate.length - 1].items.push(item);
-    });
-    setHistory(historyByDate);
-    setIsLoading(false);
-  }, [address, alchemy.core, allCategories, publicClient]);
+      const historyFrom = dataFrom.transfers.map(
+        item =>
+          ({
+            address: item.to,
+            value: item.value,
+            asset: item.asset,
+            hash: item.hash,
+            type: "sent",
+            category: item.category,
+            categoryLabel: item.category === AssetTransfersCategory.EXTERNAL ? "Sent" : categoryToLabel[item.category],
+            timestamp:
+              blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
+            icon:
+              item.category === AssetTransfersCategory.INTERNAL ? (
+                <ArrowPathIcon className="w-5" />
+              ) : (
+                <PaperAirplaneIcon className="w-5" />
+              ),
+          } as HistoryItem),
+      );
+
+      const historyTo = dataTo.transfers.map(
+        item =>
+          ({
+            address: item.from,
+            value: item.value,
+            asset: item.asset,
+            hash: item.hash,
+            type: "received",
+            category: item.category,
+            categoryLabel:
+              item.category === AssetTransfersCategory.EXTERNAL ? "Received" : categoryToLabel[item.category],
+            timestamp:
+              blocksData.find(block => block.number === hexToBigInt(item.blockNum as `0x${string}`))?.timestamp || 0,
+            icon:
+              item.category === AssetTransfersCategory.INTERNAL ? (
+                <ArrowPathIcon className="w-5" />
+              ) : (
+                <ArrowDownTrayIcon className="w-5" />
+              ),
+          } as HistoryItem),
+      );
+      const history = historyFrom.concat(historyTo);
+      const sortedHistory = history.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+      const historyByDate: HistoryItemByDate[] = [];
+      let lastDate = "";
+      sortedHistory.forEach(item => {
+        const date = new Date(Number(item.timestamp * 1000n)).toDateString();
+        if (date !== lastDate) {
+          lastDate = date;
+          historyByDate.push({ date, items: [] });
+        }
+        historyByDate[historyByDate.length - 1].items.push(item);
+      });
+      setHistory(historyByDate);
+    },
+    [publicClient],
+  );
+
+  const refetchQuery = useCallback(() => {
+    refetchDataFrom();
+    refetchDataTo();
+  }, [refetchDataFrom, refetchDataTo]);
 
   useEffect(() => {
-    if (address && chain) {
-      updateHistory();
+    if (address && chain && isDataFromFetched && isDataToFetched) {
+      updateHistory(dataFromQuery, dataToQuery);
     }
-  }, [address, chain, updateHistory]);
+  }, [address, chain, dataFromQuery, dataToQuery, isDataFromFetched, isDataToFetched, updateHistory]);
 
   return {
     chainId: chain?.id || 1,
     history,
-    isLoading,
-    updateHistory,
+    isLoading: isDataFromLoading || isDataToLoading,
+    refetchQuery,
   };
 };

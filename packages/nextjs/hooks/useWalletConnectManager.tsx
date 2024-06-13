@@ -5,7 +5,7 @@ import { parseUri } from "@walletconnect/utils";
 import { buildApprovedNamespaces, getSdkError } from "@walletconnect/utils";
 import { Web3WalletTypes } from "@walletconnect/web3wallet";
 import { useLocalStorage } from "usehooks-ts";
-import { Hex, PrivateKeyAccount, createWalletClient, hexToBigInt, hexToString, http, isAddress } from "viem";
+import { Hex, PrivateKeyAccount, createWalletClient, hexToBigInt, hexToString, http, isAddress, isHex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { useSwitchNetwork } from "wagmi";
 import { EIP155_SIGNING_METHODS } from "~~/data/EIP155Data";
@@ -127,7 +127,8 @@ export const useWalletConnectManager = () => {
       const { chainId, request } = params;
       const requestParamsMessage = request.params[0];
 
-      const currentChainId = window?.localStorage?.getItem?.(SCAFFOLD_CHAIN_ID_STORAGE_KEY);
+      const currentChainId =
+        window?.localStorage?.getItem?.(SCAFFOLD_CHAIN_ID_STORAGE_KEY) ?? networks[0].id.toString();
 
       if (!chainId || !currentChainId) {
         return await web3wallet.respondSessionRequest({
@@ -174,7 +175,7 @@ export const useWalletConnectManager = () => {
       switch (request.method) {
         case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
         case EIP155_SIGNING_METHODS.ETH_SIGN:
-          const messageToSign = hexToString(requestParamsMessage);
+          const messageToSign = isHex(requestParamsMessage) ? hexToString(requestParamsMessage) : requestParamsMessage;
           setConfirmationData({
             id,
             topic,
