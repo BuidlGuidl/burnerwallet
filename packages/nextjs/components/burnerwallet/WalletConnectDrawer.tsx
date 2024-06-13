@@ -131,7 +131,8 @@ export const WalletConnectDrawer = () => {
       const { chainId, request } = params;
       const requestParamsMessage = request.params[0];
 
-      const currentChainId = window?.localStorage?.getItem?.(SCAFFOLD_CHAIN_ID_STORAGE_KEY);
+      const currentChainId =
+        window?.localStorage?.getItem?.(SCAFFOLD_CHAIN_ID_STORAGE_KEY) ?? networks[0].id.toString();
 
       if (!chainId || !currentChainId) {
         return await web3wallet.respondSessionRequest({
