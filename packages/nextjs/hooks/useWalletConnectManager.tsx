@@ -5,7 +5,17 @@ import { parseUri } from "@walletconnect/utils";
 import { buildApprovedNamespaces, getSdkError } from "@walletconnect/utils";
 import { Web3WalletTypes } from "@walletconnect/web3wallet";
 import { useLocalStorage } from "usehooks-ts";
-import { Hex, PrivateKeyAccount, createWalletClient, hexToBigInt, hexToString, http, isAddress, isHex } from "viem";
+import {
+  Chain,
+  Hex,
+  PrivateKeyAccount,
+  createWalletClient,
+  hexToBigInt,
+  hexToString,
+  http,
+  isAddress,
+  isHex,
+} from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { useSwitchNetwork } from "wagmi";
 import { EIP155_SIGNING_METHODS } from "~~/data/EIP155Data";
@@ -31,12 +41,15 @@ export const useWalletConnectManager = () => {
   const isWalletConnectOpen = useGlobalState(state => state.isWalletConnectOpen);
   const setIsWalletConnectOpen = useGlobalState(state => state.setIsWalletConnectOpen);
   const [isSessionProposalOpen, setIsSessionProposalOpen] = useState(false);
-  const [isTransactionConfirmOpen, setIsTransactionConfirmOpen] = useState(false);
+  const isTransactionConfirmOpen = useGlobalState(state => state.isTransactionConfirmOpen);
+  const setIsTransactionConfirmOpen = useGlobalState(state => state.setIsTransactionConfirmOpen);
+  const [isNetworkSwitchOpen, setIsNetworkSwitchOpen] = useState(false);
 
   const [sessionProposalData, setSessionProposalData] = useState<any>();
   const [confirmationData, setConfirmationData] = useState<any>({});
   const [confirmationTitle, setConfirmationTitle] = useState("");
   const [confirmationInfo, setConfirmationInfo] = useState<ReactNode>();
+  const [networkFromRequest, setNetworkFromRequest] = useState<Chain | undefined>();
 
   const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
 
@@ -147,31 +160,6 @@ export const useWalletConnectManager = () => {
         });
       }
 
-      if (chainIdNumber !== parseInt(currentChainId)) {
-        if (!switchNetwork) {
-          return await web3wallet.respondSessionRequest({
-            topic,
-            response: errorResponse(id, "Can not switch network"),
-          });
-        }
-
-        try {
-          if (confirm(`Do you want to switch to ${chainFromRequest.name}?`)) {
-            switchNetwork(chainIdNumber);
-          } else {
-            return await web3wallet.respondSessionRequest({
-              topic,
-              response: errorResponse(id, "User rejected network switch"),
-            });
-          }
-        } catch (error: any) {
-          return await web3wallet.respondSessionRequest({
-            topic,
-            response: errorResponse(id, error.message),
-          });
-        }
-      }
-
       switch (request.method) {
         case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
         case EIP155_SIGNING_METHODS.ETH_SIGN:
@@ -183,8 +171,7 @@ export const useWalletConnectManager = () => {
             method: request.method,
             data: messageToSign,
           });
-          setIsTransactionConfirmOpen(true);
-          return;
+          break;
         case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
         case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
         case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
@@ -200,8 +187,7 @@ export const useWalletConnectManager = () => {
             method: request.method,
             data: data,
           });
-          setIsTransactionConfirmOpen(true);
-          return;
+          break;
         case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
         case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
           const fieldsToCheck = ["value", "gas"];
@@ -221,14 +207,27 @@ export const useWalletConnectManager = () => {
             method: request.method,
             data: requestParamsMessage,
           });
-          setIsTransactionConfirmOpen(true);
-          return;
+          break;
         default:
           console.error("Invalid Method");
           return await web3wallet.respondSessionRequest({
             topic,
             response: errorResponse(id, "Invalid Method"),
           });
+      }
+
+      if (chainIdNumber !== parseInt(currentChainId)) {
+        if (!switchNetwork) {
+          return await web3wallet.respondSessionRequest({
+            topic,
+            response: errorResponse(id, "Can not switch network"),
+          });
+        }
+
+        setNetworkFromRequest(chainFromRequest);
+        setIsNetworkSwitchOpen(true);
+      } else {
+        setIsTransactionConfirmOpen(true);
       }
     }
 
@@ -272,6 +271,23 @@ export const useWalletConnectManager = () => {
       setIsWalletConnectOpen(false);
     }
     setLoading(false);
+  }
+
+  async function onNetworkSwitchReject() {
+    setIsNetworkSwitchOpen(false);
+    return await web3wallet.respondSessionRequest({
+      topic: confirmationData.topic,
+      response: errorResponse(confirmationData.id, "User rejected network switch"),
+    });
+  }
+
+  async function onNetworkSwitchAccept() {
+    if (!switchNetwork || !networkFromRequest) {
+      return;
+    }
+    switchNetwork(networkFromRequest.id);
+    setIsNetworkSwitchOpen(false);
+    setIsTransactionConfirmOpen(true);
   }
 
   async function onConfirmTransaction() {
@@ -436,6 +452,8 @@ export const useWalletConnectManager = () => {
     loading,
     isTransactionConfirmOpen,
     setIsTransactionConfirmOpen,
+    isNetworkSwitchOpen,
+    setIsNetworkSwitchOpen,
     confirmationTitle,
     confirmationInfo,
     onConfirmTransaction,
@@ -444,5 +462,8 @@ export const useWalletConnectManager = () => {
     walletConnectUid,
     onSessionProposalAccept,
     onSessionProposalReject,
+    onNetworkSwitchAccept,
+    onNetworkSwitchReject,
+    networkFromRequest,
   };
 };

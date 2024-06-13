@@ -2,6 +2,7 @@
 
 import { RandomLoadingBackground } from "./RandomLoadingBackground";
 import { WalletConnectProposalDrawer } from "./burnerwallet/WalletConnectProposalDrawer";
+import { WalletConnectSwitchNetworkDrawer } from "./burnerwallet/WalletConnectSwitchNetworkDrawer";
 import { WalletConnectTransactionDrawer } from "./burnerwallet/WalletConnectTransactionDrawer";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { useLocalStorage } from "usehooks-ts";
@@ -88,6 +89,7 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
           <WalletConnectDrawer />
           <WalletConnectProposalDrawer />
           <WalletConnectTransactionDrawer />
+          <WalletConnectSwitchNetworkDrawer />
         </div>
       </div>
     </div>
