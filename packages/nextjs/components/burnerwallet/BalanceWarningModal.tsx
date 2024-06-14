@@ -46,7 +46,14 @@ export const BalanceWarningModal = () => {
 
   return (
     <Dialog open={isWarningModalOpen} onOpenChange={setIsWarningModalOpen}>
-      <DialogContent>
+      <DialogContent
+        onInteractOutside={e => {
+          e.preventDefault();
+        }}
+        onEscapeKeyDown={e => {
+          e.preventDefault();
+        }}
+      >
         <div>
           <div role="alert" className="alert alert-warning mb-1">
             <ExclamationTriangleIcon className="w-6 h-6" />
