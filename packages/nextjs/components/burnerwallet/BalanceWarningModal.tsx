@@ -5,6 +5,7 @@ import { CopyPrivateKey } from "./CopyPrivateKey";
 import { useLocalStorage } from "usehooks-ts";
 import { useAccount } from "wagmi";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { Dialog, DialogContent } from "~~/components/Dialog";
 import { useAccountBalance } from "~~/hooks/scaffold-eth";
 
 const BURNER_WALLET_HIDE_BALANCE_STORAGE_KEY = "scaffoldEth2.hideBalanceWarning";
@@ -44,16 +45,16 @@ export const BalanceWarningModal = () => {
   }
 
   return (
-    <>
-      <input
-        readOnly
-        type="checkbox"
-        id="balance_warning_modal"
-        className="modal-toggle"
-        checked={isWarningModalOpen}
-      />
-      <div className="modal" role="dialog">
-        <div className="modal-box">
+    <Dialog open={isWarningModalOpen} onOpenChange={setIsWarningModalOpen}>
+      <DialogContent
+        onInteractOutside={e => {
+          e.preventDefault();
+        }}
+        onEscapeKeyDown={e => {
+          e.preventDefault();
+        }}
+      >
+        <div>
           <div role="alert" className="alert alert-warning mb-1">
             <ExclamationTriangleIcon className="w-6 h-6" />
             <span>
@@ -79,7 +80,7 @@ export const BalanceWarningModal = () => {
             </button>
           </div>
         </div>
-      </div>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 };
