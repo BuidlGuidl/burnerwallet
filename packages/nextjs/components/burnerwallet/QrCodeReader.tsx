@@ -9,8 +9,9 @@ import { notification } from "~~/utils/scaffold-eth";
 const ReactQrReader = dynamic(() => import("react-qr-reader"), { ssr: false });
 
 // Cleans up extra characters from Coinbase Wallet QR Code.
+// Example: https://eips.ethereum.org/EIPS/eip-67
 function cleanAddress(result: string) {
-  return result.replace("ethereum:", "");
+  return result.replace("ethereum:", "").split("?")[0];
 }
 
 const QrCodeReader = () => {
