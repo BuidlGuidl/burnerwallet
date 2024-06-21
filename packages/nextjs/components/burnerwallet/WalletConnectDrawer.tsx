@@ -6,14 +6,12 @@ import { useWalletConnectManager } from "~~/hooks/useWalletConnectManager";
 
 export const WalletConnectDrawer = () => {
   const {
-    onConnect,
+    activeSessions,
     disconnect,
     isWalletConnectOpen,
     setIsWalletConnectOpen,
     isWalletConnectInitialized,
     loading,
-    walletConnectSession,
-    walletConnectUid,
   } = useWalletConnectManager();
 
   return (
@@ -24,38 +22,22 @@ export const WalletConnectDrawer = () => {
           <DrawerTitle className="mt-1 text-2xl">WalletConnect</DrawerTitle>
         </DrawerHeader>
         <div>
-          <div className="max-w-lg mx-auto mb-8 text-center">
-            {walletConnectSession ? (
-              walletConnectUid ? (
-                <button
-                  disabled={!walletConnectUid || loading}
-                  className="btn btn-neutral bg-white/50"
-                  onClick={async () => {
-                    await disconnect();
-                    await onConnect({ uri: walletConnectUid });
-                  }}
-                >
-                  {loading ? "Loading..." : "Disconnect and Connect to new Dapp"}
-                </button>
-              ) : (
-                <div>
-                  <div>Connected to {walletConnectSession.peer.metadata.name}</div>
-                  <button className="btn btn-neutral bg-white/50" disabled={loading} onClick={disconnect}>
+          <div className="max-w-lg mx-auto">
+            {isWalletConnectInitialized &&
+              activeSessions.length > 0 &&
+              activeSessions.map(session => (
+                <div key={session.topic} className="flex justify-between items-center">
+                  <div className="m-2">Connected to {session.peer.metadata.name}</div>
+                  <button
+                    className="btn btn-primary m-2"
+                    disabled={loading}
+                    onClick={async () => await disconnect(session)}
+                  >
                     Disconnect
                   </button>
                 </div>
-              )
-            ) : isWalletConnectInitialized ? (
-              <button
-                disabled={!walletConnectUid || loading}
-                className="btn btn-neutral bg-white/50"
-                onClick={() => onConnect({ uri: walletConnectUid })}
-              >
-                {loading ? "Loading..." : "Connect to Dapp"}
-              </button>
-            ) : (
-              <div>Loading WalletConnect...</div>
-            )}
+              ))}
+            {!isWalletConnectInitialized && <div>Loading WalletConnect...</div>}
           </div>
         </div>
       </DrawerContent>

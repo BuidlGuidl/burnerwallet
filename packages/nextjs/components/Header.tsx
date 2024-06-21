@@ -14,6 +14,7 @@ import { SettingsDrawer } from "~~/components/burnerwallet/SettingsDrawer";
 import { WalletConnectDrawer } from "~~/components/burnerwallet/WalletConnectDrawer";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, useAutoConnect } from "~~/hooks/scaffold-eth";
+import { useWalletConnectManager } from "~~/hooks/useWalletConnectManager";
 import WalletConnectIcon from "~~/icons/WalletConnectIcon";
 import { useGlobalState } from "~~/services/store/store";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
@@ -33,7 +34,6 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
   useAutoConnect();
 
   const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
-  const walletConnectSession = useGlobalState(state => state.walletConnectSession);
   const setIsWalletConnectOpen = useGlobalState(state => state.setIsWalletConnectOpen);
   const { address: connectedAddress } = useAccount();
   const { switchNetwork } = useSwitchNetwork({
@@ -42,6 +42,8 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
     },
   });
   const { chain } = useNetwork();
+
+  const { activeSessions } = useWalletConnectManager();
 
   return (
     <div className={"relative overflow-hidden"}>
@@ -61,7 +63,7 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
         <div className="flex justify-between items-center mb-6">
           <SettingsDrawer />
           <div className="flex">
-            {walletConnectSession && (
+            {activeSessions.length > 0 && (
               <button
                 className="mr-4"
                 onClick={() => {
