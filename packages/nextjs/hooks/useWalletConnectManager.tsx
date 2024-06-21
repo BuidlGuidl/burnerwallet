@@ -446,7 +446,6 @@ export const useWalletConnectManager = () => {
       return;
     }
 
-    console.log("web3wallet.getActiveSessions(): ", web3wallet.getActiveSessions());
     const activeSessions = Object.values(web3wallet.getActiveSessions());
 
     if (activeSessions.length > 0) {
