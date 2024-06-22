@@ -18,7 +18,7 @@ const ADDRESSES = [
 
 export const RandomLoadingBackground = ({ isLoading = false }: { isLoading: boolean }) => {
   const [count, setCount] = useState(0);
-  const [time, setTime] = useState(250);
+  const [time, setTime] = useState(150);
 
   useEffect(() => {
     // When there is a loading state, cycle through the ADDRESSES above
@@ -31,11 +31,11 @@ export const RandomLoadingBackground = ({ isLoading = false }: { isLoading: bool
         }
 
         if (count === 2) {
-          setTime(500);
+          setTime(350);
         }
 
         if (count === 4) {
-          setTime(750);
+          setTime(600);
         }
 
         setCount(count + 1);
