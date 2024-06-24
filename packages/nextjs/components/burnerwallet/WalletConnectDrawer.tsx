@@ -32,7 +32,7 @@ export const WalletConnectDrawer = () => {
                   className="btn btn-neutral bg-white/50"
                   onClick={async () => {
                     await disconnect();
-                    await onConnect(walletConnectUid);
+                    await onConnect({ uri: walletConnectUid });
                   }}
                 >
                   {loading ? "Loading..." : "Disconnect and Connect to new Dapp"}
@@ -49,7 +49,7 @@ export const WalletConnectDrawer = () => {
               <button
                 disabled={!walletConnectUid || loading}
                 className="btn btn-neutral bg-white/50"
-                onClick={() => onConnect(walletConnectUid)}
+                onClick={() => onConnect({ uri: walletConnectUid })}
               >
                 {loading ? "Loading..." : "Connect to Dapp"}
               </button>
