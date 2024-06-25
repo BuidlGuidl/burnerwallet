@@ -16,7 +16,6 @@ import { Address, Balance } from "~~/components/scaffold-eth";
 import { SCAFFOLD_CHAIN_ID_STORAGE_KEY, useAutoConnect } from "~~/hooks/scaffold-eth";
 import { useWalletConnectManager } from "~~/hooks/useWalletConnectManager";
 import WalletConnectIcon from "~~/icons/WalletConnectIcon";
-import { useGlobalState } from "~~/services/store/store";
 import { getTargetNetworks } from "~~/utils/scaffold-eth";
 
 const networks = getTargetNetworks();
@@ -34,7 +33,6 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
   useAutoConnect();
 
   const setChainId = useLocalStorage<number>(SCAFFOLD_CHAIN_ID_STORAGE_KEY, networks[0].id)[1];
-  const setIsWalletConnectOpen = useGlobalState(state => state.setIsWalletConnectOpen);
   const { address: connectedAddress } = useAccount();
   const { switchNetwork } = useSwitchNetwork({
     onSuccess(data) {
@@ -43,7 +41,7 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
   });
   const { chain } = useNetwork();
 
-  const { activeSessions } = useWalletConnectManager();
+  const walletConnectManager = useWalletConnectManager();
 
   return (
     <div className={"relative overflow-hidden"}>
@@ -63,11 +61,11 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
         <div className="flex justify-between items-center mb-6">
           <SettingsDrawer />
           <div className="flex">
-            {activeSessions.length > 0 && (
+            {walletConnectManager.activeSessions.length > 0 && (
               <button
                 className="mr-4"
                 onClick={() => {
-                  setIsWalletConnectOpen(true);
+                  walletConnectManager.setIsWalletConnectOpen(true);
                 }}
               >
                 <WalletConnectIcon width="40" height="40" />
@@ -88,10 +86,10 @@ export const Header = ({ isGenerateWalletLoading, showIntro, updateHistory }: He
         <div className="flex items-center justify-center gap-6 mt-6">
           <ReceiveDrawer address={connectedAddress} />
           <SendDrawer address={connectedAddress} updateHistory={updateHistory} />
-          <WalletConnectDrawer />
-          <WalletConnectProposalDrawer />
-          <WalletConnectTransactionDrawer />
-          <WalletConnectSwitchNetworkDrawer />
+          <WalletConnectDrawer walletConnectManager={walletConnectManager} />
+          <WalletConnectProposalDrawer walletConnectManager={walletConnectManager} />
+          <WalletConnectTransactionDrawer walletConnectManager={walletConnectManager} />
+          <WalletConnectSwitchNetworkDrawer walletConnectManager={walletConnectManager} />
         </div>
       </div>
     </div>
