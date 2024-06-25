@@ -24,10 +24,6 @@ type GlobalState = {
   setWalletConnectUid: (newValue: string) => void;
   isWalletConnectInitialized: boolean;
   setIsWalletConnectInitialized: (newValue: boolean) => void;
-  isWalletConnectOpen: boolean;
-  setIsWalletConnectOpen: (newValue: boolean) => void;
-  isTransactionConfirmOpen: boolean;
-  setIsTransactionConfirmOpen: (newValue: boolean) => void;
   isSendDrawerOpen: boolean;
   setIsSendDrawerOpen: (newValue: boolean) => void;
 };
@@ -45,10 +41,6 @@ export const useGlobalState = create<GlobalState>(set => ({
   setWalletConnectUid: (newValue: string): void => set(() => ({ walletConnectUid: newValue })),
   isWalletConnectInitialized: false,
   setIsWalletConnectInitialized: (newValue: boolean): void => set(() => ({ isWalletConnectInitialized: newValue })),
-  isWalletConnectOpen: false,
-  setIsWalletConnectOpen: (newValue: boolean): void => set(() => ({ isWalletConnectOpen: newValue })),
-  isTransactionConfirmOpen: false,
-  setIsTransactionConfirmOpen: (newValue: boolean): void => set(() => ({ isTransactionConfirmOpen: newValue })),
   isSendDrawerOpen: false,
   setIsSendDrawerOpen: (newValue: boolean): void => set(() => ({ isSendDrawerOpen: newValue })),
 }));
