@@ -1,8 +1,7 @@
 "use client";
 
 import React, { ReactNode, useEffect, useState } from "react";
-import { parseUri } from "@walletconnect/utils";
-import { buildApprovedNamespaces, getSdkError } from "@walletconnect/utils";
+import { buildApprovedNamespaces, getSdkError, parseUri } from "@walletconnect/utils";
 import { Web3WalletTypes } from "@walletconnect/web3wallet";
 import { useLocalStorage } from "usehooks-ts";
 import {
@@ -120,8 +119,18 @@ export const useWalletConnectManager = () => {
     });
   }
 
-  async function onConnect(uri: string) {
-    const { topic: pairingTopic } = parseUri(uri);
+  async function onConnect({
+    uri = "",
+    pair = true,
+    pairingTopic = "",
+  }: {
+    uri?: string;
+    pair?: boolean;
+    pairingTopic?: string;
+  }) {
+    if (!pairingTopic && uri) {
+      pairingTopic = parseUri(uri).topic;
+    }
 
     const pairingExpiredListener = ({ topic }: { topic: string }) => {
       if (pairingTopic === topic) {
@@ -251,7 +260,9 @@ export const useWalletConnectManager = () => {
         setInitialized(true);
       }
 
-      await web3wallet.pair({ uri });
+      if (pair) {
+        await web3wallet.pair({ uri });
+      }
     } catch (error) {
       notification.error((error as Error).message);
     } finally {
@@ -430,7 +441,7 @@ export const useWalletConnectManager = () => {
       } else {
         if (isWalletConnectInitialized) {
           // if there is no session and WC is initialized, show the confirmation data to connect to dapp
-          onConnect(walletConnectUid);
+          onConnect({ uri: walletConnectUid });
         } else {
           // if there is no session and WC is not initialized, show a loading message
           setIsSessionProposalOpen(true);
@@ -439,6 +450,22 @@ export const useWalletConnectManager = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletConnectUid, walletConnectSession, isWalletConnectInitialized]);
+
+  useEffect(() => {
+    if (!isWalletConnectInitialized || !web3wallet) {
+      return;
+    }
+
+    const activeSession = Object.values(web3wallet.getActiveSessions())[0];
+
+    if (activeSession && !walletConnectSession) {
+      if (!initialized) {
+        onConnect({ pair: false, pairingTopic: activeSession.pairingTopic });
+      }
+      setWalletConnectSession(activeSession);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [web3wallet, isWalletConnectInitialized, initialized]);
 
   return {
     onConnect,
