@@ -1,61 +1,34 @@
 "use client";
 
 import React from "react";
+import { SessionTypes } from "@walletconnect/types";
 import { Drawer, DrawerContent, DrawerHeader, DrawerLine, DrawerTitle } from "~~/components/Drawer";
-import { useWalletConnectManager } from "~~/hooks/useWalletConnectManager";
 
-export const WalletConnectDrawer = () => {
-  const {
-    onConnect,
-    disconnect,
-    isWalletConnectOpen,
-    setIsWalletConnectOpen,
-    isWalletConnectInitialized,
-    loading,
-    walletConnectSession,
-    walletConnectUid,
-  } = useWalletConnectManager();
-
+export const WalletConnectDrawer = ({ walletConnectManager }: { walletConnectManager: any }) => {
   return (
-    <Drawer open={isWalletConnectOpen} onOpenChange={setIsWalletConnectOpen}>
+    <Drawer open={walletConnectManager.isWalletConnectOpen} onOpenChange={walletConnectManager.setIsWalletConnectOpen}>
       <DrawerContent>
         <DrawerLine />
         <DrawerHeader>
           <DrawerTitle className="mt-1 text-2xl">WalletConnect</DrawerTitle>
         </DrawerHeader>
         <div>
-          <div className="max-w-lg mx-auto mb-8 text-center">
-            {walletConnectSession ? (
-              walletConnectUid ? (
-                <button
-                  disabled={!walletConnectUid || loading}
-                  className="btn btn-neutral bg-white/50"
-                  onClick={async () => {
-                    await disconnect();
-                    await onConnect({ uri: walletConnectUid });
-                  }}
-                >
-                  {loading ? "Loading..." : "Disconnect and Connect to new Dapp"}
-                </button>
-              ) : (
-                <div>
-                  <div>Connected to {walletConnectSession.peer.metadata.name}</div>
-                  <button className="btn btn-neutral bg-white/50" disabled={loading} onClick={disconnect}>
+          <div className="max-w-lg mx-auto">
+            {walletConnectManager.isWalletConnectInitialized &&
+              walletConnectManager.activeSessions.length > 0 &&
+              walletConnectManager.activeSessions.map((session: SessionTypes.Struct) => (
+                <div key={session.topic} className="flex justify-between items-center">
+                  <div className="m-2">Connected to {session.peer.metadata.name}</div>
+                  <button
+                    className="btn btn-primary m-2"
+                    disabled={walletConnectManager.loading}
+                    onClick={async () => await walletConnectManager.disconnect(session)}
+                  >
                     Disconnect
                   </button>
                 </div>
-              )
-            ) : isWalletConnectInitialized ? (
-              <button
-                disabled={!walletConnectUid || loading}
-                className="btn btn-neutral bg-white/50"
-                onClick={() => onConnect({ uri: walletConnectUid })}
-              >
-                {loading ? "Loading..." : "Connect to Dapp"}
-              </button>
-            ) : (
-              <div>Loading WalletConnect...</div>
-            )}
+              ))}
+            {!walletConnectManager.isWalletConnectInitialized && <div>Loading WalletConnect...</div>}
           </div>
         </div>
       </DrawerContent>
