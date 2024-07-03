@@ -77,7 +77,7 @@ const QrCodeReader = () => {
                 onError={(error: any) => console.log(error)}
                 style={{ width: "100%", zIndex: 100 }}
               />
-              <div className="text-center mt-8 invisible">
+              <div className="text-center mt-8">
                 <button className="btn btn-secondary" onClick={() => setIsManual(true)}>
                   Enter address or WC UID manually
                 </button>
